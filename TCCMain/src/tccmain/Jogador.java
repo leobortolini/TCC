@@ -24,6 +24,10 @@ public class Jogador {
         pontuacao = 0;
     }
 
+    public char UltimaCor(){
+        return cores.charAt(cores.length() -1);
+    }
+    
     public int getId(){
         return id;
     }
