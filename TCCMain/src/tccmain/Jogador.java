@@ -35,7 +35,7 @@ public class Jogador {
     public float getPontuacao(){
         return pontuacao;
     }
-    
+
     public int checar_preferencia() {
         int pref = 0;
 

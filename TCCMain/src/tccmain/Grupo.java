@@ -7,10 +7,6 @@ package tccmain;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author neijo
- */
 public class Grupo {
 
     private ArrayList<Jogador> jogadores;
@@ -25,25 +21,32 @@ public class Grupo {
     }
 
     public void emparceirar_grupo() {
+        Integer numero_rodada = partidas.size() + 1;
+        
+        partidas.add(new Emparceiramento (numero_rodada, new ArrayList<>()));
         int quantidade_pref_brancas = preferencia_brancas();
         int quantidade_pref_preto = preferencia_pretas();
         int rebaixar = 0;
 
         if (quantidade_pref_brancas == quantidade_pref_preto) {
-
+            for (int i = 0; i < quantidade_pref_brancas; i++) {
+                if(!jogadores.get(i).jogou_com(i + quantidade_pref_brancas)){
+                    for (int j = quantidade_pref_brancas; j < quantidade_pref_brancas * 2; j++) {
+                        if(jogadores.get(i).checar_preferencia() > jogadores.get(j).checar_preferencia()){
+                            partidas.get(numero_rodada).adicionar_partida(numero_rodada, new Partida(jogadores.get(i), jogadores.get(j)));
+                        }else if (jogadores.get(i).checar_preferencia() < jogadores.get(j).checar_preferencia()){
+                            partidas.get(numero_rodada).adicionar_partida(numero_rodada, new Partida(jogadores.get(j), jogadores.get(i)));
+                        }
+                    }
+                    if(!partidas.get(i).foi_emparceirado(numero_rodada, i)){
+                        //ver pq nao foi emparceirado e emparceirar 
+                    }
+                }
+            }
         } else if (quantidade_pref_brancas > quantidade_pref_preto) {
             rebaixar = pior_brancas();
         } else if (quantidade_pref_brancas < quantidade_pref_brancas) {
             rebaixar = pior_pretas();
-        }
-        int quantidade_jogos = jogadores.size();
-
-        if (rebaixar > 0) {
-            quantidade_jogos--;
-        }
-
-        for (int i = 0; i < quantidade_jogos; i++) {
-
         }
     }
 
