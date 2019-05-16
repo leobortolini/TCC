@@ -12,7 +12,7 @@ public class Grupo {
     private ArrayList<Jogador> jogadores;
     private float pontuacao_grupo;
     private ArrayList<Emparceiramento> partidas;
-
+    private ArrayList<Jogador> rebaixar;
     public Grupo() {
     }
 
@@ -39,30 +39,30 @@ public class Grupo {
                         }
                     }
                     if(!partidas.get(i).foi_emparceirado(numero_rodada, i)){
-                        //ver pq nao foi emparceirado e emparceirar 
+                        //checar pq nao foi emparceirado e emparceirar
                     }
                 }
             }
         } else if (quantidade_pref_brancas > quantidade_pref_preto) {
-            rebaixar = pior_brancas();
+            jogadores.remove(pior_brancas());
         } else if (quantidade_pref_brancas < quantidade_pref_brancas) {
-            rebaixar = pior_pretas();
+            jogadores.remove(pior_pretas());
         }
     }
 
-    public int pior_pretas() {
-        int id = 0;
+    public Jogador pior_pretas() {
+        Jogador rebaixado = null;
 
         for (Jogador e : jogadores) {
             if (e.checar_preferencia() > 0) {
-                id = e.getId();
+                rebaixado = e;
                 break;
             }
         }
-        if (id == 0) {
+        if (rebaixado == null) {
             for (Jogador e : jogadores) {
                 if (e.UltimaCor() == 'b') {
-                    id = e.getId();
+                    rebaixado = e;
                     break;
                 }
             }
@@ -70,41 +70,42 @@ public class Grupo {
 
         for (Jogador e : jogadores) {
             if (e.checar_preferencia() > 0 || e.UltimaCor() == 'p') {
-                if (e.getId() > id) {
-                    id = e.getId();
+                if (e.getId() > rebaixado.getId()) {
+                    rebaixado = e;
                 }
             }
         }
 
-        return id;
+        return rebaixado;
     }
 
-    public int pior_brancas() {
-        int id = 0;
-        //pior com preferencia brancas
+    public Jogador pior_brancas() {
+        Jogador rebaixado = null;
+
         for (Jogador e : jogadores) {
             if (e.checar_preferencia() < 0) {
-                id = e.getId();
+                rebaixado = e;
                 break;
             }
         }
-        if (id == 0) {
+        if (rebaixado == null) {
             for (Jogador e : jogadores) {
                 if (e.UltimaCor() == 'p') {
-                    id = e.getId();
+                    rebaixado = e;
                     break;
                 }
             }
         }
+
         for (Jogador e : jogadores) {
             if (e.checar_preferencia() < 0 || e.UltimaCor() == 'p') {
-                if (e.getId() > id) {
-                    id = e.getId();
+                if (e.getId() > rebaixado.getId()) {
+                    rebaixado = e;
                 }
             }
         }
 
-        return id;
+        return rebaixado;
     }
 
     public int preferencia_pretas() {
