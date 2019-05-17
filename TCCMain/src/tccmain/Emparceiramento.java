@@ -24,14 +24,6 @@ public class Emparceiramento {
     }
     
     public boolean foi_emparceirado(int numero_rodada, int id_jogador){
-        boolean foi = false;
-
-        for (int i = 0; i < emparceiramentos.get(numero_rodada).size(); i++) {
-            if(emparceiramentos.get(numero_rodada).get(i).esta_emparceirado(i)){
-                foi = true;
-                break;
-            }
-        }
-        return foi;
+        return emparceiramentos.get(numero_rodada).get(id_jogador).esta_emparceirado(id_jogador);
     }
 }

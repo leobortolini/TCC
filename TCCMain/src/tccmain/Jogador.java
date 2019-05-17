@@ -35,7 +35,12 @@ public class Jogador {
     public float getPontuacao(){
         return pontuacao;
     }
-
+    
+    public boolean ultimas_tres_cores(char c){
+        return cores.charAt(cores.length() - 2) == cores.charAt(cores.length() - 1) &&
+                cores.charAt(cores.length() - 1) == c;
+    }
+    
     public int checar_preferencia() {
         int pref = 0;
 

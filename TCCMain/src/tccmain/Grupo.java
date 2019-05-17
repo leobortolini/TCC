@@ -12,7 +12,8 @@ public class Grupo {
     private ArrayList<Jogador> jogadores;
     private float pontuacao_grupo;
     private ArrayList<Emparceiramento> partidas;
-    private ArrayList<Jogador> rebaixar;
+    public static ArrayList<Jogador> rebaixar;
+
     public Grupo() {
     }
 
@@ -22,31 +23,45 @@ public class Grupo {
 
     public void emparceirar_grupo() {
         Integer numero_rodada = partidas.size() + 1;
-        
-        partidas.add(new Emparceiramento (numero_rodada, new ArrayList<>()));
+
+        partidas.add(new Emparceiramento(numero_rodada, new ArrayList<>()));
         int quantidade_pref_brancas = preferencia_brancas();
         int quantidade_pref_preto = preferencia_pretas();
-        int rebaixar = 0;
+        boolean terminou = false;
 
-        if (quantidade_pref_brancas == quantidade_pref_preto) {
-            for (int i = 0; i < quantidade_pref_brancas; i++) {
-                if(!jogadores.get(i).jogou_com(i + quantidade_pref_brancas)){
+        while (!terminou) {
+            if (quantidade_pref_brancas == quantidade_pref_preto) {
+                for (int i = 0; i < quantidade_pref_brancas; i++) {
                     for (int j = quantidade_pref_brancas; j < quantidade_pref_brancas * 2; j++) {
-                        if(jogadores.get(i).checar_preferencia() > jogadores.get(j).checar_preferencia()){
+                        if (jogadores.get(i).checar_preferencia() > jogadores.get(j).checar_preferencia()
+                                && !jogadores.get(i).jogou_com(jogadores.get(j).getId())
+                                && jogadores.get(i).checar_preferencia() > -2
+                                && jogadores.get(j).checar_preferencia() < 2
+                                && !jogadores.get(i).ultimas_tres_cores('b')
+                                && !jogadores.get(j).ultimas_tres_cores('p')) {
                             partidas.get(numero_rodada).adicionar_partida(numero_rodada, new Partida(jogadores.get(i), jogadores.get(j)));
-                        }else if (jogadores.get(i).checar_preferencia() < jogadores.get(j).checar_preferencia()){
+                            break;
+                        } else if (jogadores.get(i).checar_preferencia() < jogadores.get(j).checar_preferencia()
+                                && !jogadores.get(i).jogou_com(jogadores.get(j).getId())
+                                && jogadores.get(i).checar_preferencia() < -2
+                                && jogadores.get(j).checar_preferencia() > 2
+                                && !jogadores.get(i).ultimas_tres_cores('p')
+                                && !jogadores.get(j).ultimas_tres_cores('b')) {
                             partidas.get(numero_rodada).adicionar_partida(numero_rodada, new Partida(jogadores.get(j), jogadores.get(i)));
+                            break;
+                            //vai repetir até achar, mas ainda nao checa se nao achar nada
                         }
                     }
-                    if(!partidas.get(i).foi_emparceirado(numero_rodada, i)){
-                        //checar pq nao foi emparceirado e emparceirar
-                    }
                 }
+            } else if (quantidade_pref_brancas > quantidade_pref_preto) {
+                Jogador rebaixado = pior_brancas();
+                jogadores.remove(rebaixado);
+                rebaixar.add(rebaixado);
+            } else if (quantidade_pref_brancas < quantidade_pref_brancas) {
+                Jogador rebaixado = pior_pretas();
+                jogadores.remove(rebaixado);
+                rebaixar.add(rebaixado);
             }
-        } else if (quantidade_pref_brancas > quantidade_pref_preto) {
-            jogadores.remove(pior_brancas());
-        } else if (quantidade_pref_brancas < quantidade_pref_brancas) {
-            jogadores.remove(pior_pretas());
         }
     }
 
