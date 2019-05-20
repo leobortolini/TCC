@@ -17,7 +17,8 @@ public class Jogador {
     private String cores;
     private ArrayList<Integer> adversarios;
     private float pontuacao;
-
+    //checar se foi rebaixado ou promovido
+    
     public Jogador(int id, String cor) {
         this.id = id;
         this.cores = cor;

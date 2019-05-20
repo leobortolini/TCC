@@ -11,8 +11,8 @@ public class Grupo {
 
     private ArrayList<Jogador> jogadores;
     private float pontuacao_grupo;
-    private ArrayList<Emparceiramento> partidas;
-    public static ArrayList<Jogador> rebaixar;
+    private ArrayList<Emparceiramento> partidas; //nao precisa de arraylist
+    public static ArrayList<Jogador> movidos;
 
     public Grupo() {
     }
@@ -56,11 +56,11 @@ public class Grupo {
             } else if (quantidade_pref_brancas > quantidade_pref_preto) {
                 Jogador rebaixado = pior_brancas();
                 jogadores.remove(rebaixado);
-                rebaixar.add(rebaixado);
-            } else if (quantidade_pref_brancas < quantidade_pref_brancas) {
+                movidos.add(rebaixado);
+            } else if (quantidade_pref_brancas < quantidade_pref_preto) {
                 Jogador rebaixado = pior_pretas();
                 jogadores.remove(rebaixado);
-                rebaixar.add(rebaixado);
+                movidos.add(rebaixado);
             }
         }
     }
