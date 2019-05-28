@@ -18,14 +18,22 @@ public class TCCMain {
      */
     
     public static void main(String[] args) {
-        ArrayList<Jogador> participantes = new ArrayList<>();
+        ArrayList<Grupo> grupos = new ArrayList<>();
+        ArrayList<Jogador> jogadores = new ArrayList<>();
         
-        for (int i = 1; i <= 22; i++) {
-            if(i % i == 0){
-                participantes.add(new Jogador(i, "p"));
-            }else{
-                participantes.add(new Jogador(i, "b"));
+        for (Jogador e : jogadores) {
+            boolean existe_grupo = false;
+            for (Grupo g : grupos) {
+                if(e.getPontuacao() == g.getPontuacao()){
+                    existe_grupo = true;
+                    g.adiciona_jogador(e);
+                }
+            }
+            if(!existe_grupo){
+                grupos.add(new Grupo(e, e.getPontuacao()));
             }
         }
+        
+        //começar o emparceiramento e puxar os movidos do grupo anterior ou posterior
     }
 }

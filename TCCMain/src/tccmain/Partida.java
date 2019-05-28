@@ -20,6 +20,14 @@ public class Partida {
         j2.adicionar_cor("p");
     }
     
+    public Jogador get1(){
+        return j1;
+    }
+    
+    public Jogador get2(){
+        return j2;
+    }
+    
     public boolean esta_emparceirado(Integer id){
         return j1.getId() == id || j2.getId() == id;
     }
