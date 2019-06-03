@@ -18,7 +18,7 @@ public class Grupo {
         jogadores = j;
         pontuacao_grupo = pont;
     }
-    
+
     public Grupo(Jogador j, float pont) {
         jogadores = new ArrayList<>();
         jogadores.add(j);
@@ -29,9 +29,10 @@ public class Grupo {
         jogadores.add(j);
     }
 
-    public float getPontuacao(){
+    public float getPontuacao() {
         return pontuacao_grupo;
     }
+
     
     public void emparceirar_grupo() {
         partidas = new Emparceiramento();
@@ -42,6 +43,7 @@ public class Grupo {
 
         while (!terminou) {
             if (quantidade_pref_brancas == quantidade_pref_preto) {
+                //jogadores.sort(); to do
                 for (int i = 0; i < quantidade_pref_brancas; i++) {
                     for (int j = quantidade_pref_brancas; j < quantidade_pref_brancas * 2; j++) {
                         if (jogadores.get(i).checar_preferencia() > jogadores.get(j).checar_preferencia()
