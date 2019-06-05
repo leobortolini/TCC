@@ -5,6 +5,8 @@
  */
 package tccmain;
 
+import fila.EmparceiramentosPropostos;
+import fila.Fila;
 import java.util.ArrayList;
 
 public class Grupo {
@@ -35,8 +37,15 @@ public class Grupo {
 
     
     public void emparceirar_grupo() {
+        ArrayList<Integer> lista_ids = new ArrayList<>();
+        
+        for(Jogador j : jogadores){
+            lista_ids.add(j.getId());
+        }
+        Fila fila = new Fila(lista_ids);
+        EmparceiramentosPropostos empar = fila.resolver_fila();
+        
         partidas = new Emparceiramento();
-
         int quantidade_pref_brancas = preferencia_brancas();
         int quantidade_pref_preto = preferencia_pretas();
         boolean terminou = false;

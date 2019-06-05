@@ -24,7 +24,9 @@ public class Fila {
         return itens;
     }
 
-    public void resolver_fila() {
+    public EmparceiramentosPropostos resolver_fila() {
+        EmparceiramentosPropostos pares = new EmparceiramentosPropostos();
+        
         while (!itens.get(0).terminou()) {
             ArrayList<ItemFila> resultados = itens.get(0).combinar();
             if (resultados == null) {
@@ -33,6 +35,13 @@ public class Fila {
             itens.addAll(resultados);
             itens.remove(0);
         }
+        for(ItemFila e : itens) {
+            for (int i = 0; i < e.getPar().size(); i++) {
+                pares.adicionar_par(e.getPar().get(i).getId1(), e.getPar().get(i).getId2());
+            }
+        }
+        
+        return pares;
     }
 
     public void mostrar_resultados() {
