@@ -5,6 +5,7 @@
  */
 package tccmain;
 
+import fila.Fila;
 import java.util.ArrayList;
 
 /**
@@ -20,12 +21,12 @@ public class TCCMain {
     public static void main(String[] args) {
         ArrayList<Integer> lista = new ArrayList<>();
         
-        for (int i = 0; i < 6; i++) {
+        for (int i = 1; i < 7; i++) {
             lista.add(i);
         }
         
         Fila fila = new Fila(lista);
         fila.resolver_fila();
-        System.out.println(fila.mostrar_resultados());
+        fila.mostrar_resultados();
     }
 }

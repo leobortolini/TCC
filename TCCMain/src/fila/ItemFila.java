@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tccmain;
+package fila;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 
 /**
  *
@@ -51,17 +49,17 @@ public class ItemFila {
         this.restantes = restantes;
     }
 
-    public boolean terminou(){
+    public boolean terminou() {
         return restantes.isEmpty();
     }
-            
+
     public String mostrar_emparceiramentos() {
         String resultado = new String();
 
         for (Par i : par) {
-            resultado.concat(i.toString());
+            resultado = resultado.concat(i.toString());
         }
-
+        
         return resultado;
     }
 
@@ -77,7 +75,15 @@ public class ItemFila {
         ArrayList<ItemFila> resultado = new ArrayList<>();
 
         for (int i = 0; i < restantes.size() / 2; i++) {
-            ItemFila item = new ItemFila(this.par, this.restantes);
+            ItemFila item = new ItemFila();
+            
+            for (Par p : par) {
+                Par pNovo = new Par(p);
+                item.getPar().add(pNovo);
+            }
+            for (Integer x : restantes) {
+                item.getRestantes().add(new Integer(x));
+            }
 
             item.getPar().add(new Par(restantes.get(0), restantes.get(restantes.size() / 2 + i)));
             item.getRestantes().remove(restantes.get(0));
@@ -85,14 +91,25 @@ public class ItemFila {
             resultado.add(item);
         }
         for (int i = 0; i < restantes.size() / 2 - 1; i++) {
-            ItemFila item = new ItemFila(this.par, this.restantes);
-
-            item.getPar().add(new Par(restantes.get(0), restantes.get(restantes.size() / 2 - i)));
+             ItemFila item = new ItemFila();
+            
+            for (Par p : par) {
+                Par pNovo = new Par(p);
+                item.getPar().add(pNovo);
+            }
+            for (Integer x : restantes) {
+                item.getRestantes().add(new Integer(x));
+            }
+            item.getPar().add(new Par(restantes.get(0), restantes.get(restantes.size() / 2 - i - 1)));
             item.getRestantes().remove(restantes.get(0));
-            item.getRestantes().remove(restantes.get(restantes.size() / 2 - i));
+            item.getRestantes().remove(restantes.get(restantes.size() / 2 - i - 1));
             resultado.add(item);
         }
         return resultado;
     }
 
+    @Override
+    public String toString() {
+        return "ItemFila{" + "par=" + par + ", restantes=" + restantes + '}';
+    }
 }

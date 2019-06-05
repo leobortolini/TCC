@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tccmain;
+package fila;
 
 /**
  *
@@ -16,6 +16,11 @@ public class Par {
     public Par(Integer id1, Integer id2){
         this.id1 = id1;
         this.id2 = id2;
+    }
+    
+    public Par(Par p) {
+        this.id1 = p.id1;
+        this.id2 = p.id2;
     }
 
     public Integer getId1() {

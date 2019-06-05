@@ -11,7 +11,7 @@ public class Grupo {
 
     private ArrayList<Jogador> jogadores;
     private float pontuacao_grupo;
-    private Emparceiramento partidas; //nao precisa de arraylist
+    private Emparceiramento partidas;
     public static ArrayList<Jogador> movidos;
 
     public Grupo(ArrayList<Jogador> j, float pont) {
@@ -43,7 +43,6 @@ public class Grupo {
 
         while (!terminou) {
             if (quantidade_pref_brancas == quantidade_pref_preto) {
-                //jogadores.sort(); to do
                 for (int i = 0; i < quantidade_pref_brancas; i++) {
                     for (int j = quantidade_pref_brancas; j < quantidade_pref_brancas * 2; j++) {
                         if (jogadores.get(i).checar_preferencia() > jogadores.get(j).checar_preferencia()
