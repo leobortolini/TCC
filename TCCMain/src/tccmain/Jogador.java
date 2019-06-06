@@ -55,6 +55,16 @@ public class Jogador {
         return pref;
     }
 
+    public int sequencia_cores_futura(char c){
+        int pref = checar_preferencia();
+        if(c == 'b'){
+            pref--;
+        }else{
+            pref++;
+        }
+        return pref;
+    }
+    
     public void adicionar_cor(String cor) {
         cores += cor;
     }

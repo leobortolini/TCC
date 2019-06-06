@@ -5,6 +5,7 @@
  */
 package tccmain;
 
+import fila.EmparceiramentoProposto;
 import fila.Fila;
 import java.util.ArrayList;
 

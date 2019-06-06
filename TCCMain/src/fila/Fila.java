@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Fila {
 
-    ArrayList<ItemFila> itens;
+    private ArrayList<ItemFila> itens;
 
     public Fila(ArrayList<Integer> ids) {
         itens = new ArrayList<>();
@@ -24,34 +24,33 @@ public class Fila {
         return itens;
     }
 
-    public EmparceiramentosPropostos resolver_fila() {
-        EmparceiramentosPropostos pares = new EmparceiramentosPropostos();
-        
+    public ArrayList<EmparceiramentoProposto> resolver_fila() {
+        ArrayList<EmparceiramentoProposto> pares = new ArrayList<>();
+
         while (!itens.get(0).terminou()) {
             ArrayList<ItemFila> resultados = itens.get(0).combinar();
-            if (resultados == null) {
-                break;
-            }
+           
             itens.addAll(resultados);
             itens.remove(0);
         }
-        for(ItemFila e : itens) {
-            for (int i = 0; i < e.getPar().size(); i++) {
-                pares.adicionar_par(e.getPar().get(i).getId1(), e.getPar().get(i).getId2());
-            }
+        for (ItemFila e : itens) {
+            pares.add(new EmparceiramentoProposto(e.getPar()));
         }
-        
+
         return pares;
     }
 
     public void mostrar_resultados() {
         String result = new String();
-        
+
         for (ItemFila e : itens) {
             result = result.concat(e.mostrar_emparceiramentos());
             result = result.concat("-------------\n");
         }
-
         System.out.println(result);
+    }
+    
+    public Integer tamanho_lista(){
+        return itens.size();
     }
 }

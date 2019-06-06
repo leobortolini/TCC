@@ -39,6 +39,12 @@ public class Par {
         this.id2 = id2;
     }
     
+    public void inverter_cores(){
+        Integer id_temp = id1;
+        id1 = id2;
+        id2 = id_temp;
+    }
+    
     @Override
     public String toString(){
         return id1 + "x" + id2 + "\n";
