@@ -46,6 +46,6 @@ public class EmparceiramentoProposto {
     }
 
     public void inelegivel() {
-        inelegivel = false;
+        inelegivel = true;
     }
 }

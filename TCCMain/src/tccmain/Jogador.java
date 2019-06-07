@@ -42,6 +42,13 @@ public class Jogador {
                 cores.charAt(cores.length() - 1) == c;
     }
     
+    public boolean rodadas_pares(){
+        if(adversarios.size() % 2 == 0){
+            return true;
+        }
+        return false;
+    }
+    
     public int checar_preferencia() {
         int pref = 0;
 
