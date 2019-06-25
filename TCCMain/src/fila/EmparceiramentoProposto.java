@@ -38,7 +38,7 @@ public class EmparceiramentoProposto {
     }
 
     public ArrayList<Par> obter_emparceiramentos() {
-        return emparceiramentos;
+        return new ArrayList<>(emparceiramentos);
     }
 
     public void seguiu_regra() {
@@ -47,5 +47,11 @@ public class EmparceiramentoProposto {
 
     public void inelegivel() {
         inelegivel = true;
+    }
+    
+    public void mostrar_emparceiramentos() {
+        emparceiramentos.forEach((p) -> {
+            System.out.println(p.toString());
+        });
     }
 }

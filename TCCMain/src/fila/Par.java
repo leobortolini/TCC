@@ -39,10 +39,11 @@ public class Par {
         this.id2 = id2;
     }
     
-    public void inverter_cores(){
+    public Par inverter_cores(){
         Integer id_temp = id1;
         id1 = id2;
         id2 = id_temp;
+        return this;
     }
     
     @Override

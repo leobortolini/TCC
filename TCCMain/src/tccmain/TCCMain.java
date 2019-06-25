@@ -18,16 +18,16 @@ public class TCCMain {
     /**
      * @param args the command line arguments
      */
-    
     public static void main(String[] args) {
-        ArrayList<Integer> lista = new ArrayList<>();
-        
+        ArrayList<Jogador> lista = new ArrayList<>();
+
         for (int i = 1; i < 7; i++) {
-            lista.add(i);
+            lista.add(new Jogador(i));
         }
-        
-        Fila fila = new Fila(lista);
-        fila.resolver_fila();
-        fila.mostrar_resultados();
+
+        Grupo g = new Grupo(lista, (float) 0.5);
+        System.out.println("------------------------------");
+        g.emparceirar_grupo();
+        System.out.println("------------------------------");
     }
 }

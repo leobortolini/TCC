@@ -18,37 +18,46 @@ public class Jogador {
     private ArrayList<Integer> adversarios;
     private float pontuacao;
     //checar se foi rebaixado ou promovido
-    
+
     public Jogador(int id, String cor) {
         this.id = id;
         this.cores = cor;
         pontuacao = 0;
     }
 
-    public char UltimaCor(){
-        return cores.charAt(cores.length() -1);
+    public Jogador(int id) {
+        this.id = id;
     }
-    
-    public int getId(){
+
+    public char UltimaCor() {
+        return cores.charAt(cores.length() - 1);
+    }
+
+    public int getId() {
         return id;
     }
-    
-    public float getPontuacao(){
+
+    public float getPontuacao() {
         return pontuacao;
     }
-    
-    public boolean ultimas_tres_cores(char c){
-        return cores.charAt(cores.length() - 2) == cores.charAt(cores.length() - 1) &&
-                cores.charAt(cores.length() - 1) == c;
+
+    public boolean ultimas_tres_cores(char c) {
+        return cores.charAt(cores.length() - 2) == cores.charAt(cores.length() - 1)
+                && cores.charAt(cores.length() - 1) == c;
+    }
+
+    public boolean rodadas_pares() {
+        return adversarios.size() % 2 == 0;
+    }
+
+    public boolean preferencia_forte_pretas() {
+        return checar_preferencia() == 2;
     }
     
-    public boolean rodadas_pares(){
-        if(adversarios.size() % 2 == 0){
-            return true;
-        }
-        return false;
+    public boolean preferencia_forte_brancas() {
+        return checar_preferencia() == 2;
     }
-    
+
     public int checar_preferencia() {
         int pref = 0;
 
@@ -62,21 +71,21 @@ public class Jogador {
         return pref;
     }
 
-    public int sequencia_cores_futura(char c){
+    public int sequencia_cores_futura(char c) {
         int pref = checar_preferencia();
-        if(c == 'b'){
+        if (c == 'b') {
             pref--;
-        }else{
+        } else {
             pref++;
         }
         return pref;
     }
-    
+
     public void adicionar_cor(String cor) {
         cores += cor;
     }
-    
-    public boolean jogou_com(Integer id_adversario){
+
+    public boolean jogou_com(Integer id_adversario) {
         return adversarios.contains(id);
     }
 }
