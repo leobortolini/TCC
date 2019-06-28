@@ -50,6 +50,8 @@ public class Grupo {
 
         while ((x = fila.obter_proximo_emparceiramento()) != null) { //checar se depois que adicionar o x na array list nao vai mduar
             ArrayList<Par> pares = x.obter_emparceiramentos();
+            float pontuacao_emparceiramento = 0;
+
             for (Par p : pares) {
                 if (jogadores.get(p.getId1()).jogou_com(p.getId2())
                         || jogadores.get(p.getId1()).preferencia_forte_brancas()
@@ -61,15 +63,26 @@ public class Grupo {
                     break;
                 }
                 if (jogadores.get(p.getId1()).rodadas_pares()) {
-                    if (jogadores.get(p.getId1()).checar_preferencia() > 0
-                            && jogadores.get(p.getId2()).checar_preferencia() < 0) {
+                    int pref_1 = jogadores.get(p.getId1()).checar_preferencia();
+                    int pref_2 = jogadores.get(p.getId2()).checar_preferencia();
+                    
+                    if (pref_1 > 0 && pref_2 < 0) {
+                        pontuacao_emparceiramento += 5;
                         break;
-                    } else if (jogadores.get(p.getId2()).checar_preferencia() > 0
-                            && jogadores.get(p.getId1()).checar_preferencia() < 0) {
+                    } else if (pref_2 > 0 && pref_1 < 0) {
                         pares.set(pares.indexOf(p), p.inverter_cores());
+                        pontuacao_emparceiramento += 5;
                         break;
                     } else {
-
+                        if ((jogadores.get(p.getId1()).preferencia_forte_brancas() 
+                                || jogadores.get(p.getId1()).checar_preferencia() > 0)  
+                                &&  !jogadores.get(p.getId2()).preferencia_forte_pretas() ) {
+                            break;
+                        } else if (jogadores.get(p.getId1()).preferencia_forte_pretas()
+                                || jogadores.get(p.getId1()).checar_preferencia() < 0){
+                            pares.set(pares.indexOf(p), p.inverter_cores());
+                            break;
+                        }
                     }
                 }
             }

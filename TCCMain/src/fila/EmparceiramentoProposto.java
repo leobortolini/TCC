@@ -9,23 +9,21 @@ import java.util.ArrayList;
 
 /**
  *
- * @author neijo
+ * @author neijo *
+
  */
 public class EmparceiramentoProposto {
 
     private ArrayList<Par> emparceiramentos;
-    private Integer num_regras_relativas;
     private boolean inelegivel;
 
     public EmparceiramentoProposto(ArrayList<Par> lista) {
         emparceiramentos = lista;
-        num_regras_relativas = 0;
         inelegivel = false;
     }
 
     public EmparceiramentoProposto() {
         emparceiramentos = new ArrayList<>();
-        num_regras_relativas = 0;
         inelegivel = false;
     }
     
@@ -41,9 +39,6 @@ public class EmparceiramentoProposto {
         return new ArrayList<>(emparceiramentos);
     }
 
-    public void seguiu_regra() {
-        num_regras_relativas++;
-    }
 
     public void inelegivel() {
         inelegivel = true;

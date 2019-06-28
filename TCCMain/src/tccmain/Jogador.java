@@ -51,7 +51,11 @@ public class Jogador {
     }
 
     public boolean preferencia_forte_pretas() {
-        return checar_preferencia() == 2;
+        return checar_preferencia() == -2;
+    }
+    
+    public boolean tem_preferencia_forte() {
+        return checar_preferencia() == -2 && checar_preferencia() == 2; 
     }
     
     public boolean preferencia_forte_brancas() {
