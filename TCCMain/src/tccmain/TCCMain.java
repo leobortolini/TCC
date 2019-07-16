@@ -21,11 +21,15 @@ public class TCCMain {
     public static void main(String[] args) {
         ArrayList<Jogador> lista = new ArrayList<>();
 
-        for (int i = 1; i < 7; i++) {
-            lista.add(new Jogador(i));
-        }
+        lista.add(new Jogador(1, "ppbb"));
+        lista.add(new Jogador(2, "pbpb"));
+        lista.add(new Jogador(3, "bppb"));
+        lista.add(new Jogador(4, "ppbb"));
+        lista.add(new Jogador(5, "bpbp"));
+        lista.add(new Jogador(6, "pbbp"));
 
         Grupo g = new Grupo(lista, (float) 0.5);
+
         System.out.println("------------------------------");
         g.emparceirar_grupo();
         System.out.println("------------------------------");

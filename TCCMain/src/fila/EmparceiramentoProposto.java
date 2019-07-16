@@ -16,15 +16,18 @@ public class EmparceiramentoProposto {
 
     private ArrayList<Par> emparceiramentos;
     private boolean inelegivel;
+    private float pont;
 
     public EmparceiramentoProposto(ArrayList<Par> lista) {
         emparceiramentos = lista;
         inelegivel = false;
+        pont = 0;
     }
 
     public EmparceiramentoProposto() {
         emparceiramentos = new ArrayList<>();
         inelegivel = false;
+        pont = 0;
     }
     
     public boolean getInelegivel(){
@@ -42,6 +45,14 @@ public class EmparceiramentoProposto {
 
     public void inelegivel() {
         inelegivel = true;
+    }
+    
+    public void adicionar_pont(float p) {
+        pont = p;
+    }
+    
+    public float getPont() {
+        return pont;
     }
     
     public void mostrar_emparceiramentos() {

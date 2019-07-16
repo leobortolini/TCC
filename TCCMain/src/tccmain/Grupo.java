@@ -47,8 +47,6 @@ public class Grupo {
         partidas = new Emparceiramento();
         EmparceiramentoProposto x = new EmparceiramentoProposto();
         ArrayList<EmparceiramentoProposto> propostas = new ArrayList<>();
-        EmparceiramentoProposto melhor = new EmparceiramentoProposto();
-        float pontuacao = 0;
 
         while ((x = fila.obter_proximo_emparceiramento()) != null) { //checar se depois que adicionar o x na array list nao vai mduar
             ArrayList<Par> pares = x.obter_emparceiramentos();
@@ -56,95 +54,121 @@ public class Grupo {
             int qtde = x.obter_emparceiramentos().size() * 2;
 
             for (Par p : pares) {
-                if (jogadores.get(p.getId1()).jogou_com(p.getId2())
-                        || jogadores.get(p.getId1()).preferencia_forte_brancas()
-                        == jogadores.get(p.getId2()).preferencia_forte_brancas()
-                        || jogadores.get(p.getId1()).preferencia_forte_pretas()
-                        == jogadores.get(p.getId2()).preferencia_forte_pretas()) {
+                if (jogadores.get(p.getId1() - 1).jogou_com(p.getId2())) {
                     x.inelegivel();
                     propostas.add(x);
+                    System.out.println("inelegivel 1");
+                    break;
+                } else if ((jogadores.get(p.getId1() - 1).preferencia_forte_brancas() == true
+                        && jogadores.get(p.getId2() - 1).preferencia_forte_brancas() == true)) {
+                    x.inelegivel();
+                    propostas.add(x);
+                    System.out.println("inelegivel 2");
+                    break;
+                } else if ((jogadores.get(p.getId1() - 1).preferencia_forte_pretas() == true
+                        && jogadores.get(p.getId2() - 1).preferencia_forte_pretas() == true)) {
+                    x.inelegivel();
+                    propostas.add(x);
+                    System.out.println("inelegivel 3");
                     break;
                 }
-                int pref_1 = jogadores.get(p.getId1()).checar_preferencia();
-                int pref_2 = jogadores.get(p.getId2()).checar_preferencia();
+                int pref_1 = jogadores.get(p.getId1() - 1).checar_preferencia();
+                int pref_2 = jogadores.get(p.getId2() - 1).checar_preferencia();
 
                 if (pref_1 == 2) {
-                    if (pref_2 < 0 || pref_2 == 0 && jogadores.get(p.getId2()).UltimaCor() == 'b') {
+                    if (pref_2 < 0 || pref_2 == 0 && jogadores.get(p.getId2() - 1).UltimaCor() == 'b') {
                         pontuacao_emparceiramento += (qtde - p.getId1());
                         pontuacao_emparceiramento += (qtde - p.getId2());
-                        break;
-                    } else if (pref_2 > 0 || jogadores.get(p.getId2()).UltimaCor() == 'p') {
+                        System.out.println("1");
+                    } else if (pref_2 > 0 || jogadores.get(p.getId2() - 1).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += (qtde - p.getId1());
-                        break;
+                        System.out.println("2");
                     }
+                    continue;
                 } else if (pref_1 == -2) {
                     pares.set(pares.indexOf(p), p.inverter_cores());
-                    if (pref_2 > 0 || pref_2 == 0 && jogadores.get(p.getId2()).UltimaCor() == 'p') {
+                    if (pref_2 > 0 || pref_2 == 0 && jogadores.get(p.getId2() - 1).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += (qtde - p.getId1());
                         pontuacao_emparceiramento += (qtde - p.getId2());
-                        break;
+                        System.out.println("3");
                     } else if (pref_2 < 0 || jogadores.get(p.getId2()).UltimaCor() == 'b') {
                         pontuacao_emparceiramento += (qtde - p.getId1());
-                        break;
+                        System.out.println("4");
                     }
+                    continue;
                 } else if (pref_2 == 2) {
                     pares.set(pares.indexOf(p), p.inverter_cores());
-                    if (pref_1 < 0 || pref_1 == 0 && jogadores.get(p.getId1()).UltimaCor() == 'b') {
+                    if (pref_1 < 0 || pref_1 == 0 && jogadores.get(p.getId1() - 1).UltimaCor() == 'b') {
                         pontuacao_emparceiramento += (qtde - p.getId1());
                         pontuacao_emparceiramento += (qtde - p.getId2());
-                        break;
-                    } else if (pref_1 > 0 || jogadores.get(p.getId1()).UltimaCor() == 'p') {
+                        System.out.println("5");
+                    } else if (pref_1 > 0 || jogadores.get(p.getId1() - 1).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += (qtde - p.getId1());
-                        break;
+                        System.out.println("6");
                     }
+                    continue;
                 } else if (pref_2 == -2) {
-                    if (pref_1 > 0 || pref_1 == 0 && jogadores.get(p.getId1()).UltimaCor() == 'p') {
+                    if (pref_1 > 0 || pref_1 == 0 && jogadores.get(p.getId1() - 1).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += (qtde - p.getId1());
                         pontuacao_emparceiramento += (qtde - p.getId2());
-                        break;
-                    } else if (pref_1 < 0 || jogadores.get(p.getId1()).UltimaCor() == 'b') {
+                        System.out.println("7");
+                    } else if (pref_1 < 0 || jogadores.get(p.getId1() - 1).UltimaCor() == 'b') {
                         pontuacao_emparceiramento += (qtde - p.getId2());
-                        break;
+                        System.out.println("8");
                     }
-                    break;
+                    continue;
                 }
-  //acima são tratados os casos de preferencia forte        
+                //acima são tratados os casos de preferencia forte        
                 if (pref_1 > 0 && pref_2 < 0
-                        || pref_1 > 0 && jogadores.get(p.getId2()).UltimaCor() == 'b'
-                        || jogadores.get(p.getId1()).UltimaCor() == 'p'
-                        && jogadores.get(p.getId2()).UltimaCor() == 'b') {
+                        || pref_1 > 0 && jogadores.get(p.getId2() - 1).UltimaCor() == 'b'
+                        || jogadores.get(p.getId1() - 1).UltimaCor() == 'p'
+                        && jogadores.get(p.getId2() - 1).UltimaCor() == 'b') {
                     pontuacao_emparceiramento += (qtde - p.getId1());
                     pontuacao_emparceiramento += (qtde - p.getId2());
-                    break;
+                    System.out.println("9");
                 } else if (pref_2 > 0 && pref_1 < 0
                         || pref_1 < 0 && jogadores.get(p.getId2()).UltimaCor() == 'p'
-                        || jogadores.get(p.getId1()).UltimaCor() == 'b'
-                        && jogadores.get(p.getId2()).UltimaCor() == 'p') {
+                        || jogadores.get(p.getId1() - 1).UltimaCor() == 'b'
+                        && jogadores.get(p.getId2() - 1).UltimaCor() == 'p') {
                     pares.set(pares.indexOf(p), p.inverter_cores());
                     pontuacao_emparceiramento += (qtde - p.getId1());
                     pontuacao_emparceiramento += (qtde - p.getId2());
-                    break;
+                    System.out.println("10");
                 } else {
-                    if (pref_1 > 0 && jogadores.get(p.getId2()).UltimaCor() == 'p') {
+                    if (pref_1 > 0 && jogadores.get(p.getId2() - 1).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += (qtde - p.getId1());
-                        break;
-                    } else if (pref_1 < 0 && jogadores.get(p.getId2()).UltimaCor() == 'b') {
+                        System.out.println("11");
+                    } else if (pref_1 < 0 && jogadores.get(p.getId2() - 1).UltimaCor() == 'b') {
                         pares.set(pares.indexOf(p), p.inverter_cores());
                         pontuacao_emparceiramento += (qtde - p.getId1());
-                        break;
-                    } else if (jogadores.get(p.getId1()).UltimaCor() == 'p'
-                            && jogadores.get(p.getId2()).UltimaCor() == 'p') {
+                        System.out.println("12");
+                    } else if (jogadores.get(p.getId1() - 1).UltimaCor() == 'p'
+                            && jogadores.get(p.getId2() - 1).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += (qtde - p.getId1());
-                        break;
-                    } else if (jogadores.get(p.getId1()).UltimaCor() == 'b'
-                            && jogadores.get(p.getId2()).UltimaCor() == 'b') {
+                        System.out.println("13");
+                    } else if (jogadores.get(p.getId1() - 1).UltimaCor() == 'b'
+                            && jogadores.get(p.getId2() - 1).UltimaCor() == 'b') {
                         pares.set(pares.indexOf(p), p.inverter_cores());
                         pontuacao_emparceiramento += (qtde - p.getId2());
-                        break;
+                        System.out.println("14");
                     }
                 }
             }
+            x.adicionar_pont(pontuacao_emparceiramento);
+            propostas.add(x);
         }
+        //abaixo só para testes
+        EmparceiramentoProposto melhor = new EmparceiramentoProposto();
+
+        for (EmparceiramentoProposto e : propostas) {
+            if (melhor.getPont() < e.getPont() && !e.getInelegivel()) {
+                melhor = e;
+            }
+        }
+        System.out.println("---------------");
+        melhor.mostrar_emparceiramentos();
+        System.out.println(melhor.getPont());
+        System.out.println("---------------");
     }
 
     public Jogador pior_pretas() {

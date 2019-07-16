@@ -23,6 +23,7 @@ public class Jogador {
         this.id = id;
         this.cores = cor;
         pontuacao = 0;
+        adversarios = new ArrayList<>();
     }
 
     public Jogador(int id) {
@@ -41,7 +42,13 @@ public class Jogador {
         return pontuacao;
     }
 
-    public boolean ultimas_tres_cores(char c) {
+    public boolean ultimas_tres_cores(char c) { //nunca pode acontecer isso
+        return cores.charAt(cores.length() - 3) == cores.charAt(cores.length() - 2)
+                && cores.charAt(cores.length() - 2) == cores.charAt(cores.length() - 1)
+                && cores.charAt(cores.length() - 1) == c;
+    }
+
+    public boolean ultimas_duas_cores(char c) {
         return cores.charAt(cores.length() - 2) == cores.charAt(cores.length() - 1)
                 && cores.charAt(cores.length() - 1) == c;
     }
@@ -51,7 +58,7 @@ public class Jogador {
     }
 
     public boolean preferencia_forte_pretas() {
-        return checar_preferencia() == -2;
+        return checar_preferencia() == -2 || ultimas_duas_cores('b');
     }
 
     public boolean tem_preferencia_forte() {
@@ -59,10 +66,15 @@ public class Jogador {
     }
 
     public boolean preferencia_forte_brancas() {
-        return checar_preferencia() == 2;
+        return checar_preferencia() == 2 || ultimas_duas_cores('p');
     }
 
     public int checar_preferencia() {
+        if (ultimas_duas_cores('p')) {
+            return 2;
+        } else if (ultimas_duas_cores('b')) {
+            return -2;
+        }
         int pref = 0;
 
         for (int i = 0; i < cores.length(); i++) {
@@ -90,6 +102,6 @@ public class Jogador {
     }
 
     public boolean jogou_com(Integer id_adversario) {
-        return adversarios.contains(id);
+        return adversarios.contains(id_adversario);
     }
 }
