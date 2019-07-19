@@ -7,6 +7,8 @@ package fila;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import tccmain.Jogador;
 
 /**
  *
@@ -63,15 +65,21 @@ public class ItemFila {
         return resultado;
     }
 
-    public void ordenar() {
+    public void ordenar(boolean grupo_debaixo) {
+        if (grupo_debaixo){
+             Comparator<Integer> por_id_decrescente = (Integer j1, Integer j2)
+                -> j2 - j1;
+             Collections.sort(restantes, por_id_decrescente);
+             return;
+        }
         Collections.sort(restantes);
     }
 
-    public ArrayList<ItemFila> combinar() {
+    public ArrayList<ItemFila> combinar(boolean grupo_debaixo) {
         if (this.restantes.isEmpty()) {
             return null;
         }
-        ordenar();
+        ordenar(grupo_debaixo);
         ArrayList<ItemFila> resultado = new ArrayList<>();
 
         for (int i = 0; i < restantes.size() / 2; i++) {
@@ -82,7 +90,7 @@ public class ItemFila {
                 item.getPar().add(pNovo);
             }
             for (Integer x : restantes) {
-                item.getRestantes().add(new Integer(x));
+                item.getRestantes().add(x);
             }
 
             item.getPar().add(new Par(restantes.get(0), restantes.get(restantes.size() / 2 + i)));
@@ -98,7 +106,7 @@ public class ItemFila {
                 item.getPar().add(pNovo);
             }
             for (Integer x : restantes) {
-                item.getRestantes().add(new Integer(x));
+                item.getRestantes().add(x);
             }
             item.getPar().add(new Par(restantes.get(0), restantes.get(restantes.size() / 2 - i - 1)));
             item.getRestantes().remove(restantes.get(0));

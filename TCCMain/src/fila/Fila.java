@@ -17,13 +17,15 @@ public class Fila {
     private EmparceiramentoProposto emparceiramento_atual;
     private int limite;
     private int repeticoes;
-
-    public Fila(ArrayList<Integer> ids) {
+    private boolean grupo_debaixo;
+    
+    public Fila(ArrayList<Integer> ids, boolean grupo) {
         itens = new ArrayList<>();
         itens.add(new ItemFila(ids));
         emparceiramento_atual = new EmparceiramentoProposto();
         limite = calcular_limite(ids.size());
         repeticoes = 0;
+        grupo_debaixo = grupo;
     }
 
     public ArrayList<ItemFila> getItens() {
@@ -40,7 +42,7 @@ public class Fila {
             return null;
         }
         while (!itens.get(0).terminou()) {
-            ArrayList<ItemFila> resultados = itens.get(0).combinar();
+            ArrayList<ItemFila> resultados = itens.get(0).combinar(grupo_debaixo);
            
             itens.remove(0);
             for(int i = resultados.size() - 1; i >= 0; i--) { 
@@ -63,7 +65,7 @@ public class Fila {
         ArrayList<EmparceiramentoProposto> pares = new ArrayList<>();
 
         while (!itens.get(0).terminou()) {
-            ArrayList<ItemFila> resultados = itens.get(0).combinar();
+            ArrayList<ItemFila> resultados = itens.get(0).combinar(grupo_debaixo); //nao é usado o "grupo_debaixo"
            
             itens.addAll(resultados);
             itens.remove(0);

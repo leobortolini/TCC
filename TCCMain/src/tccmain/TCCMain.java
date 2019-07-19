@@ -31,7 +31,7 @@ public class TCCMain {
         Grupo g = new Grupo(lista, (float) 0.5);
 
         System.out.println("------------------------------");
-        g.emparceirar_grupo();
+        g.emparceirar_grupo(false);
         System.out.println("------------------------------");
     }
 }

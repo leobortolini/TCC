@@ -20,7 +20,11 @@ public class Partida {
         j2.adicionar_cor("p");
     }
     
-    public Jogador get1(){
+    public Partida(Integer id1, Integer id2) {
+        
+    }
+    
+    public Jogador get1() {
         return j1;
     }
     
