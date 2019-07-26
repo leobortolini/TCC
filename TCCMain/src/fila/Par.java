@@ -18,6 +18,9 @@ public class Par {
         this.id2 = id2;
     }
     
+    public Par(){
+    }
+    
     public Par(Par p) {
         this.id1 = p.id1;
         this.id2 = p.id2;

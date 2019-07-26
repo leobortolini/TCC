@@ -68,6 +68,7 @@ public class Emparceirador {
         //falta agora, coordenar a ordem de emparceiramento dos grupos
         //manipular os flutuantes 
         
+        
     }
 
     public boolean existe_grupo(float pont) {
