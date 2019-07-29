@@ -18,14 +18,20 @@ public class Fila {
     private int limite;
     private int repeticoes;
     private boolean grupo_debaixo;
+    private ArrayList<Integer> ids_cima;
+    private ArrayList<Integer> ids_baixo;
     
-    public Fila(ArrayList<Integer> ids, boolean grupo) {
+    public Fila(ArrayList<Integer> ids, boolean grupo, ArrayList<Integer> ids_cima, ArrayList<Integer> ids_baixo) {
         itens = new ArrayList<>();
-        itens.add(new ItemFila(ids));
+        itens.add(new ItemFila(ids, ids_cima, ids_baixo));
         emparceiramento_atual = new EmparceiramentoProposto();
         limite = calcular_limite(ids.size());
         repeticoes = 0;
         grupo_debaixo = grupo;
+        this.ids_cima = new ArrayList<>();
+        this.ids_cima.addAll(ids_cima);
+        this.ids_baixo = new ArrayList<>();
+        this.ids_baixo.addAll(ids_baixo);
     }
 
     public ArrayList<ItemFila> getItens() {

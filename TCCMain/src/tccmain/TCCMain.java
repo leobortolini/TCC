@@ -33,7 +33,7 @@ public class TCCMain {
         Grupo g = new Grupo(lista, (float) 0.5);
 
         System.out.println("------------------------------");
-        g.receber_flutuante(true, j);
+        g.receber_flutuante(false, j);
         g.emparceirar_grupo(false);
         System.out.println("------------------------------");
     }

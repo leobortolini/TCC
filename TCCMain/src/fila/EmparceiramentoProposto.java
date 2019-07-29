@@ -37,6 +37,12 @@ public class EmparceiramentoProposto {
     public void adicionar_par(Integer id1, Integer id2) {
         emparceiramentos.add(new Par(id1, id2));
     }
+    
+    public void adicionar_par(ArrayList<Par> p) {
+        p.forEach((p1) -> {
+            emparceiramentos.add(new Par(p1.getId1(), p1.getId2()));
+        });
+    }
 
     public ArrayList<Par> obter_emparceiramentos() {
         return new ArrayList<>(emparceiramentos);
