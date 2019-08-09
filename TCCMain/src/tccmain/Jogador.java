@@ -98,9 +98,9 @@ public class Jogador {
         int pref = 0;
         
         for (int i = 0; i < cores.length(); i++) {
-            if ("p".equals(cores.charAt(i))) {
+            if ('p' == cores.charAt(i)) {
                 pref++;
-            } else if ("b".equals(cores.charAt(i))) {
+            } else if ('b' == cores.charAt(i)) {
                 pref--;
             }
         }
