@@ -382,6 +382,7 @@ public class Grupo {
             partidas_finais.add(transforma_partida(p));
         }
         partidas = new Emparceiramento(partidas_finais, pontuacao_grupo);
+        
         return partidas;
     }
 

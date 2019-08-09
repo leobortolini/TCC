@@ -19,14 +19,14 @@ public class TCCMain {
     public static void main(String[] args) {
         ArrayList<Jogador> lista = new ArrayList<>();
 
-        lista.add(new Jogador(1, "pbpb"));
-        lista.add(new Jogador(2, "bbbp"));
-        lista.add(new Jogador(3, "bbbp"));
-        lista.add(new Jogador(4, "bbbp"));
-        lista.add(new Jogador(5, "bbbp"));
-        lista.add(new Jogador(6, "bbbp"));
-        lista.add(new Jogador(7, "bbbp"));
-        Jogador j = new Jogador(8, "bbbp");
+        lista.add(new Jogador(1, "bpbp"));
+        lista.add(new Jogador(2, "bbpp"));
+        lista.add(new Jogador(3, "bppb"));
+        lista.add(new Jogador(4, "pbpb"));
+        lista.add(new Jogador(5, "ppbb"));
+        lista.add(new Jogador(6, "pbbp"));
+        lista.add(new Jogador(7, "pbbp"));
+        Jogador j = new Jogador(8, "bbpb");
 
         Grupo g = new Grupo(lista, (float) 0.5);
 
