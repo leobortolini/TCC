@@ -18,39 +18,21 @@ public class ItemFila {
 
     private ArrayList<Par> par;
     private ArrayList<Integer> restantes;
-    private ArrayList<Integer> ids_cima;
-    private ArrayList<Integer> ids_baixo;
 
     public ItemFila(ArrayList<Par> pares, ArrayList<Integer> restantes) {
         this.par = pares;
         this.restantes = restantes;
-        ids_cima = new ArrayList<>();
-        ids_baixo = new ArrayList<>();
     }
 
     public ItemFila(ArrayList<Integer> ids) {
         par = new ArrayList<>();
         restantes = new ArrayList<>();
         restantes.addAll(ids);
-        ids_cima = new ArrayList<>();
-        ids_baixo = new ArrayList<>();
-    }
-
-    public ItemFila(ArrayList<Integer> ids, ArrayList<Integer> ids_cima, ArrayList<Integer> ids_baixo) {
-        par = new ArrayList<>();
-        restantes = new ArrayList<>();
-        restantes.addAll(ids);
-        this.ids_cima = new ArrayList<>();
-        this.ids_cima.addAll(ids_cima);
-        this.ids_baixo = new ArrayList<>();
-        this.ids_baixo.addAll(ids_baixo);
     }
 
     public ItemFila() {
         par = new ArrayList<>();
         restantes = new ArrayList<>();
-        ids_cima = new ArrayList<>();
-        ids_baixo = new ArrayList<>();
     }
 
     public ArrayList<Par> getPar() {
@@ -88,25 +70,10 @@ public class ItemFila {
             Comparator<Integer> por_id_decrescente = (Integer j1, Integer j2)
                     -> j2 - j1;
             Collections.sort(restantes, por_id_decrescente);
-            if (ids_baixo.size() > 0) {
-                Collections.sort(ids_baixo);
-                restantes.addAll(0, ids_baixo);
-            }
-            if (ids_cima.size() > 0) {
-                Collections.sort(ids_cima);
-                restantes.addAll(ids_cima);
-            }
+
             return;
         }
         Collections.sort(restantes);
-        if (ids_baixo.size() > 0) {
-            Collections.sort(ids_baixo);
-            restantes.addAll(ids_baixo);
-        }
-        if (ids_cima.size() > 0) {
-            Collections.sort(ids_cima);
-            restantes.addAll(0, restantes);
-        }
     }
 
     public ArrayList<ItemFila> combinar(boolean grupo_debaixo) {
@@ -147,6 +114,7 @@ public class ItemFila {
             item.getRestantes().remove(restantes.get(restantes.size() / 2 - i - 1));
             resultado.add(item);
         }
+        
         return resultado;
     }
 

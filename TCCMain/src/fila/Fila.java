@@ -21,9 +21,9 @@ public class Fila {
     private ArrayList<Integer> ids_cima;
     private ArrayList<Integer> ids_baixo;
     
-    public Fila(ArrayList<Integer> ids, boolean grupo, ArrayList<Integer> ids_cima, ArrayList<Integer> ids_baixo) {
+    public Fila(ArrayList<Integer> ids, boolean grupo) {
         itens = new ArrayList<>();
-        itens.add(new ItemFila(ids, ids_cima, ids_baixo));
+        itens.add(new ItemFila(ids));
         emparceiramento_atual = new EmparceiramentoProposto();
         limite = calcular_limite(ids.size());
         repeticoes = 0;
