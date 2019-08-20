@@ -28,6 +28,7 @@ public class Grupo {
     private ArrayList<Grupo> grupos_colapsados_baixo;
     private ArrayList<Jogador> jogadores_cima;
     private ArrayList<Jogador> jogadores_baixo;
+    private ArrayList<Jogador> jogares_emparceirados_flut;
     private ArrayList<Par> lista_restricao;
 
     public Grupo(ArrayList<Jogador> j, float pont) {
@@ -39,6 +40,7 @@ public class Grupo {
         jogadores_baixo = new ArrayList<>();
         jogadores_cima = new ArrayList<>();
         lista_restricao = new ArrayList<>();
+        jogares_emparceirados_flut = new ArrayList<>();
     }
 
     public Grupo(Jogador j, float pont) {
@@ -51,6 +53,7 @@ public class Grupo {
         jogadores_baixo = new ArrayList<>();
         jogadores_cima = new ArrayList<>();
         lista_restricao = new ArrayList<>();
+        jogares_emparceirados_flut = new ArrayList<>();
     }
 
     public void adiciona_jogador(Jogador j) {
@@ -219,9 +222,11 @@ public class Grupo {
         pares_flutuantes.add(par_melhor);
         for (Jogador j : jogadores) {
             if (j.getId() == par_melhor.getId1()) {
+                jogares_emparceirados_flut.add(j);
                 jogadores.remove(j);
                 break;
             } else if (j.getId() == par_melhor.getId2()) {
+                jogares_emparceirados_flut.add(j);
                 jogadores.remove(j);
                 break;
             }
@@ -385,7 +390,7 @@ public class Grupo {
         melhor.adicionar_par(pares_flutuantes);
         melhor.mostrar_emparceiramentos();
         ArrayList<Partida> partidas_finais = new ArrayList<>();
-
+        
         for (Par p : melhor.obter_emparceiramentos()) {
             partidas_finais.add(transforma_partida(p));
         }
@@ -394,9 +399,9 @@ public class Grupo {
         return partidas;
     }
 
-    public void encontra_grupo_rebaixados(ArrayList<Par> lista_restricao) {
-        if (jogadores.size() < 9) {
-            //return null;
+    public ArrayList<Integer> encontra_grupo_rebaixados() {
+        if (jogadores.size() < 3) {
+            return null;
         }
         HashMap<Integer, Integer> contador = new HashMap<>();
 
@@ -404,8 +409,7 @@ public class Grupo {
             if (!contador.containsKey(p.getId1())) {
                 contador.put(p.getId1(), 1);
             } else {
-                int valor_novo = contador.get(p.getId1());
-                valor_novo++;
+                int valor_novo = contador.get(p.getId1()) + 1;
                 contador.replace(p.getId1(), valor_novo);
             }
             if (!contador.containsKey(p.getId2())) {
@@ -419,10 +423,12 @@ public class Grupo {
 
         HashMap<Integer, Integer> lista_ord = contador.entrySet().stream().
                 sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).
-                collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2)
+                        -> e1, LinkedHashMap::new));
+        ArrayList<Integer> ids_rebaixar = new ArrayList<>();
 
-        lista_ord.forEach((key, value) -> System.out.println(key + " - " + value));
-        //continuar e retornar os jogadores a serem rebaixados
+        lista_ord.forEach((key, value) -> ids_rebaixar.add(key));
+        return (ArrayList<Integer>) ids_rebaixar.subList(0, 2);
     }
 
     public void unir_grupo(Grupo g, boolean de_baixo) {
