@@ -9,7 +9,6 @@ import fila.EmparceiramentoProposto;
 import fila.Fila;
 import fila.Par;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -29,7 +28,6 @@ public class Grupo {
     private ArrayList<Jogador> jogadores_cima;
     private ArrayList<Jogador> jogadores_baixo;
     private ArrayList<Jogador> jogares_emparceirados_flut;
-    private ArrayList<Par> lista_restricao;
 
     public Grupo(ArrayList<Jogador> j, float pont) {
         jogadores = j;
@@ -39,7 +37,6 @@ public class Grupo {
         grupos_colapsados_baixo = new ArrayList<>();
         jogadores_baixo = new ArrayList<>();
         jogadores_cima = new ArrayList<>();
-        lista_restricao = new ArrayList<>();
         jogares_emparceirados_flut = new ArrayList<>();
     }
 
@@ -52,10 +49,9 @@ public class Grupo {
         grupos_colapsados_baixo = new ArrayList<>();
         jogadores_baixo = new ArrayList<>();
         jogadores_cima = new ArrayList<>();
-        lista_restricao = new ArrayList<>();
         jogares_emparceirados_flut = new ArrayList<>();
     }
-
+    
     public void adiciona_jogador(Jogador j) {
         jogadores.add(j);
     }
@@ -90,18 +86,18 @@ public class Grupo {
         for (Integer i : lista_ids) {
             Par p = new Par(jogador.getId(), i);
             float pontuacao_par_atual = 0;
-            System.out.println("Par flutuante: " + p.toString());
+            //System.out.println("Par flutuante: " + p.toString());
 
             if (jogador.jogou_com(p.getId2())) {
-                System.out.println("jogaram entre si flutuante");
+                //System.out.println("jogaram entre si flutuante");
                 continue;
             } else if ((jogador.preferencia_forte_brancas() == true
                     && encontra_jogador(p.getId2()).preferencia_forte_brancas() == true)) {
-                System.out.println("pref forte branca flutuante");
+                //System.out.println("pref forte branca flutuante");
                 continue;
             } else if ((jogador.preferencia_forte_pretas() == true
                     && encontra_jogador(p.getId2()).preferencia_forte_pretas() == true)) {
-                System.out.println("pref forte preta flutuante");
+                //System.out.println("pref forte preta flutuante");
                 continue;
             }
             int pref_1 = jogador.checar_preferencia();
@@ -111,10 +107,10 @@ public class Grupo {
                 if (pref_2 < 0 || pref_2 == 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
                     pontuacao_par_atual += 1000;
                     pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId2());
-                    System.out.println("1");
+                    //System.out.println("1");
                 } else if (pref_2 > 0 || encontra_jogador(p.getId2()).UltimaCor() == 'p') {
                     pontuacao_par_atual += 1000;
-                    System.out.println("2");
+                    //System.out.println("2");
                 }
                 if (pontuacao_par_atual > pontuacao_par_melhor) {
                     par_melhor = new Par(p);
@@ -127,10 +123,10 @@ public class Grupo {
                 if (pref_2 > 0 || pref_2 == 0 && encontra_jogador(p.getId1()).UltimaCor() == 'p') {
                     pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId1());
                     pontuacao_par_atual += 1000;
-                    System.out.println("3");
+                    //System.out.println("3");
                 } else if (pref_2 < 0 || encontra_jogador(p.getId1()).UltimaCor() == 'b') {
                     pontuacao_par_atual += 1000;
-                    System.out.println("4");
+                    //System.out.println("4");
                 }
                 if (pontuacao_par_atual > pontuacao_par_melhor) {
                     conseguiu = true;
@@ -143,10 +139,10 @@ public class Grupo {
                 if (pref_1 < 0 || pref_1 == 0 && jogador.UltimaCor() == 'b') {
                     pontuacao_par_atual += 1000;
                     pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId2());
-                    System.out.println("5");
+                    //System.out.println("5");
                 } else if (pref_1 > 0 || jogador.UltimaCor() == 'p') {
                     pontuacao_par_atual += 0;
-                    System.out.println("6");
+                    //System.out.println("6");
                 }
                 if (pontuacao_par_atual > pontuacao_par_melhor) {
                     par_melhor = new Par(p);
@@ -158,10 +154,10 @@ public class Grupo {
                 if (pref_1 > 0 || pref_1 == 0 && jogador.UltimaCor() == 'p') {
                     pontuacao_par_atual += 1000;
                     pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId2());
-                    System.out.println("7");
+                    //System.out.println("7");
                 } else if (pref_1 < 0 || jogador.UltimaCor() == 'b') {
                     pontuacao_par_atual += 0;
-                    System.out.println("8");
+                    //System.out.println("8");
                 }
                 if (pontuacao_par_atual > pontuacao_par_melhor) {
                     par_melhor = new Par(p);
@@ -177,7 +173,7 @@ public class Grupo {
                     && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
                 pontuacao_par_atual += 1000;
                 pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId2());
-                System.out.println("9");
+                //System.out.println("9");
             } else if (pref_2 > 0 && pref_1 < 0
                     || pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p'
                     || jogador.UltimaCor() == 'b'
@@ -185,24 +181,24 @@ public class Grupo {
                 p = p.inverter_cores();
                 pontuacao_par_atual += 1000;
                 pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId1());
-                System.out.println("10");
+                //System.out.println("10");
             } else {
                 if (pref_1 > 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
                     pontuacao_par_atual += 1000;
-                    System.out.println("11");
+                    //System.out.println("11");
                 } else if (pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
                     p = p.inverter_cores();
                     pontuacao_par_atual += 1000;
-                    System.out.println("12");
+                    //System.out.println("12");
                 } else if (jogador.UltimaCor() == 'p'
                         && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
                     pontuacao_par_atual += 1000;
-                    System.out.println("13");
+                    //System.out.println("13");
                 } else if (jogador.UltimaCor() == 'b'
                         && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
                     p = p.inverter_cores();
                     pontuacao_par_atual += 1000;
-                    System.out.println("14");
+                    //System.out.println("14");
                 }
             }
             if (pontuacao_par_atual > pontuacao_par_melhor) {
@@ -253,13 +249,14 @@ public class Grupo {
         jogadores.forEach((j) -> {
             lista_ids.add(j.getId());
         });
-        Fila fila = new Fila(lista_ids, grupo_debaixo); //tratar cada jogador de grupos colapsados como jogadores flutuantes.
+        Fila fila = new Fila(lista_ids, grupo_debaixo); 
 
         partidas = new Emparceiramento();
         EmparceiramentoProposto x = new EmparceiramentoProposto();
         ArrayList<EmparceiramentoProposto> propostas = new ArrayList<>();
-
-        while ((x = fila.obter_proximo_emparceiramento()) != null) { //checar se depois que adicionar o x na array list nao vai mduar
+        int contador = 0;
+        while ((x = fila.obter_proximo_emparceiramento()) != null) { 
+            contador++;
             ArrayList<Par> pares = x.obter_emparceiramentos();
             float pontuacao_emparceiramento = 0;
             int qtde = x.obter_emparceiramentos().size() * 2;
@@ -267,29 +264,23 @@ public class Grupo {
             for (Par p : pares) {
                 if (encontra_jogador(p.getId1()).jogou_com(p.getId2())) {
                     x.inelegivel();
-                    if (!lista_restricao.contains(p)) {
-                        lista_restricao.add(new Par(p));
-                    }
                     propostas.add(x);
-                    System.out.println("inelegivel 1");
+                    fila.adicionar_restricao(p);
+                    //System.out.println("inelegivel 1");
                     break;
                 } else if ((encontra_jogador(p.getId1()).preferencia_forte_brancas() == true
                         && encontra_jogador(p.getId2()).preferencia_forte_brancas() == true)) {
                     x.inelegivel();
-                    if (!lista_restricao.contains(p)) {
-                        lista_restricao.add(new Par(p));
-                    }
                     propostas.add(x);
-                    System.out.println("inelegivel 2");
+                    fila.adicionar_restricao(p);
+                    //System.out.println("inelegivel 2");
                     break;
                 } else if ((encontra_jogador(p.getId1()).preferencia_forte_pretas() == true
                         && encontra_jogador(p.getId2()).preferencia_forte_pretas() == true)) {
                     x.inelegivel();
-                    if (!lista_restricao.contains(p)) {
-                        lista_restricao.add(new Par(p));
-                    }
                     propostas.add(x);
-                    System.out.println("inelegivel 3");
+                    fila.adicionar_restricao(p);
+                    //System.out.println("inelegivel 3");
                     break;
                 }
                 int pref_1 = encontra_jogador(p.getId1()).checar_preferencia();
@@ -299,10 +290,10 @@ public class Grupo {
                     if (pref_2 < 0 || pref_2 == 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                        System.out.println("1");
+                        //System.out.println("1");
                     } else if (pref_2 > 0 || encontra_jogador(p.getId2()).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
-                        System.out.println("2");
+                        //System.out.println("2");
                     }
                     continue;
                 } else if (pref_1 == -2) {
@@ -310,10 +301,10 @@ public class Grupo {
                     if (pref_2 > 0 || pref_2 == 0 && encontra_jogador(p.getId1()).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                        System.out.println("3");
+                        //System.out.println("3");
                     } else if (pref_2 < 0 || encontra_jogador(p.getId1()).UltimaCor() == 'b') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                        System.out.println("4");
+                        //System.out.println("4");
                     }
                     continue;
                 } else if (pref_2 == 2) {
@@ -321,20 +312,20 @@ public class Grupo {
                     if (pref_1 < 0 || pref_1 == 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                        System.out.println("5");
+                        //System.out.println("5");
                     } else if (pref_1 > 0 || encontra_jogador(p.getId2()).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
-                        System.out.println("6");
+                        //System.out.println("6");
                     }
                     continue;
                 } else if (pref_2 == -2) {
                     if (pref_1 > 0 || pref_1 == 0 && encontra_jogador(p.getId1()).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                        System.out.println("7");
+                        //System.out.println("7");
                     } else if (pref_1 < 0 || encontra_jogador(p.getId1()).UltimaCor() == 'b') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                        System.out.println("8");
+                        //System.out.println("8");
                     }
                     continue;
                 }
@@ -345,7 +336,7 @@ public class Grupo {
                         && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
                     pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                     pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                    System.out.println("9");
+                    //System.out.println("9");
                 } else if (pref_2 > 0 && pref_1 < 0
                         || pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p'
                         || encontra_jogador(p.getId1()).UltimaCor() == 'b'
@@ -353,24 +344,24 @@ public class Grupo {
                     pares.set(pares.indexOf(p), p.inverter_cores());
                     pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                     pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                    System.out.println("10");
+                    //System.out.println("10");
                 } else {
                     if (pref_1 > 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
-                        System.out.println("11");
+                        //System.out.println("11");
                     } else if (pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
                         pares.set(pares.indexOf(p), p.inverter_cores());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                        System.out.println("12");
+                        //System.out.println("12");
                     } else if (encontra_jogador(p.getId1()).UltimaCor() == 'p'
                             && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
-                        System.out.println("13");
+                        //System.out.println("13");
                     } else if (encontra_jogador(p.getId1()).UltimaCor() == 'b'
                             && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
                         pares.set(pares.indexOf(p), p.inverter_cores());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                        System.out.println("14");
+                        //System.out.println("14");
                     }
                 }
             }
@@ -385,7 +376,7 @@ public class Grupo {
             }
         }
         if (melhor.getPont() == 0) {
-            return null; //checar no retorno a lista de restriçao
+            return null; 
         }
         melhor.adicionar_par(pares_flutuantes);
         melhor.mostrar_emparceiramentos();
@@ -395,43 +386,14 @@ public class Grupo {
             partidas_finais.add(transforma_partida(p));
         }
         partidas = new Emparceiramento(partidas_finais, pontuacao_grupo);
-
+        System.out.println(contador);
         return partidas;
     }
 
-    public ArrayList<Integer> encontra_grupo_rebaixados() {
-        if (jogadores.size() < 3) {
-            return null;
-        }
-        HashMap<Integer, Integer> contador = new HashMap<>();
-
-        lista_restricao.forEach((p) -> {
-            if (!contador.containsKey(p.getId1())) {
-                contador.put(p.getId1(), 1);
-            } else {
-                int valor_novo = contador.get(p.getId1()) + 1;
-                contador.replace(p.getId1(), valor_novo);
-            }
-            if (!contador.containsKey(p.getId2())) {
-                contador.put(p.getId2(), 1);
-            } else {
-                int valor_novo = contador.get(p.getId2());
-                valor_novo++;
-                contador.replace(p.getId2(), valor_novo);
-            }
-        });
-
-        HashMap<Integer, Integer> lista_ord = contador.entrySet().stream().
-                sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).
-                collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2)
-                        -> e1, LinkedHashMap::new));
-        ArrayList<Integer> ids_rebaixar = new ArrayList<>();
-
-        lista_ord.forEach((key, value) -> ids_rebaixar.add(key));
-        return (ArrayList<Integer>) ids_rebaixar.subList(0, 2);
-    }
-
     public void unir_grupo(Grupo g, boolean de_baixo) {
+        for(Jogador j : g.getJogadores()) {
+            jogadores.add(new Jogador(j));
+        }
         if (de_baixo) {
             grupos_colapsados_baixo.add(g);
         }

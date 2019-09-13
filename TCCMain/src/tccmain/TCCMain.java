@@ -5,9 +5,7 @@
  */
 package tccmain;
 
-import fila.Par;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  *
@@ -16,23 +14,33 @@ import java.util.Arrays;
 public class TCCMain {
 
     /**
+     * 
+     * 
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         ArrayList<Jogador> lista = new ArrayList<>();
 
-        lista.add(new Jogador(1, "ppbbp", 2, 4, 5));     
-        lista.add(new Jogador(2, "pbbpp", 3, 5, 7));
-        lista.add(new Jogador(3, "bpbbp", 4, 6, 8));
-        lista.add(new Jogador(4, "bbppb", 5, 7, 1)); 
-        lista.add(new Jogador(5, "bbppb", 1, 8, 2));
-        lista.add(new Jogador(6, "bbppb", 7, 3));//log na base 2 do numero de jogadores
-        lista.add(new Jogador(7, "ppbbp", 8, 2, 4));
-        Jogador j = new Jogador(8, "bppbp", 1, 3, 5); 
+        lista.add(new Jogador(1, "bbbppp", 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16));     
+        lista.add(new Jogador(2, "pppbbb", 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16));
+        lista.add(new Jogador(3, "bbbppp", 1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16));
+        lista.add(new Jogador(4, "pppbbb", 1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)); 
+        lista.add(new Jogador(5, "bbbppp", 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16));
+        lista.add(new Jogador(6, "pppbbb", 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16));//log na base 2 do numero de jogadores
+        lista.add(new Jogador(7, "bbbppp", 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16));
+        lista.add(new Jogador(8, "pppbbb", 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16)); 
+        lista.add(new Jogador(9, "bbbppp", 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15, 16));     
+        lista.add(new Jogador(10, "pppbbb", 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15, 16));
+        lista.add(new Jogador(11, "bbbppp", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16));
+        lista.add(new Jogador(12, "pppbbb", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16)); 
+        lista.add(new Jogador(13, "bbbppp", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 16));
+        lista.add(new Jogador(14, "pppbbb", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 16));//log na base 2 do numero de jogadores
+        lista.add(new Jogador(15, "bbbppp", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14));
+        lista.add(new Jogador(16, "pppbbb", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14));
         Grupo g = new Grupo(lista, (float) 0.5);
 
         System.out.println("------------------------------");
-        System.out.println(g.receber_flutuante(true, j));
         System.out.println(g.emparceirar_grupo(false));
         System.out.println("------------------------------");
     }

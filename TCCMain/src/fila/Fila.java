@@ -6,6 +6,7 @@
 package fila;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -20,7 +21,8 @@ public class Fila {
     private boolean grupo_debaixo;
     private ArrayList<Integer> ids_cima;
     private ArrayList<Integer> ids_baixo;
-    
+    private ArrayList<Par> pares_rest;
+
     public Fila(ArrayList<Integer> ids, boolean grupo) {
         itens = new ArrayList<>();
         itens.add(new ItemFila(ids));
@@ -32,26 +34,32 @@ public class Fila {
         this.ids_cima.addAll(ids_cima);
         this.ids_baixo = new ArrayList<>();
         this.ids_baixo.addAll(ids_baixo);
+        pares_rest = new ArrayList<>();
     }
 
     public ArrayList<ItemFila> getItens() {
         return itens;
     }
-    
-    public EmparceiramentoProposto getEmparceiramento_atual(){
+
+    public EmparceiramentoProposto getEmparceiramento_atual() {
         return emparceiramento_atual;
     }
 
-    public EmparceiramentoProposto obter_proximo_emparceiramento(){
-        if (repeticoes == limite) { 
+    @SuppressWarnings("empty-statement")
+    public void adicionar_restricao(Par p) {
+        itens.removeIf((t) -> (t.contem_par(p)));
+    }
+
+    public EmparceiramentoProposto obter_proximo_emparceiramento() {
+        if (repeticoes == limite || itens.isEmpty()) {
             System.out.println("atingiu o limite de repeticoes da fila");
             return null;
         }
         while (!itens.get(0).terminou()) {
             ArrayList<ItemFila> resultados = itens.get(0).combinar(grupo_debaixo);
-           
+
             itens.remove(0);
-            for(int i = resultados.size() - 1; i >= 0; i--) { 
+            for (int i = resultados.size() - 1; i >= 0; i--) {
                 itens.add(0, resultados.get(i));
             }
         }
@@ -60,22 +68,19 @@ public class Fila {
         repeticoes++;
         return getEmparceiramento_atual();
     }
-    
-    
+
     /**
-     * @deprecated 
-     * @return 
+     * @deprecated @return
      */
-    
     public ArrayList<EmparceiramentoProposto> resolver_fila() {
         ArrayList<EmparceiramentoProposto> pares = new ArrayList<>();
 
         while (!itens.get(0).terminou()) {
             ArrayList<ItemFila> resultados = itens.get(0).combinar(grupo_debaixo); //nao é usado o "grupo_debaixo"
-           
+
             itens.addAll(resultados);
             itens.remove(0);
-            
+
             for (ItemFila i : resultados) {
                 resultados.add(0, i);
             }
@@ -96,18 +101,18 @@ public class Fila {
         }
         System.out.println(result);
     }
-    
-    public Integer tamanho_lista(){
+
+    public Integer tamanho_lista() {
         return itens.size();
     }
 
     private int calcular_limite(int tam) {
         int valor = 1;
-        
+
         for (int i = 1; i < tam; i += 2) {
             valor *= i;
         }
-        
+
         return valor;
     }
 }

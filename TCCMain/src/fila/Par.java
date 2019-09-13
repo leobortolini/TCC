@@ -29,6 +29,10 @@ public class Par {
     public Integer getId1() {
         return id1;
     }
+    
+    public boolean igual(Par p) {
+        return id1 == p.getId1() && id2 == p.getId2();
+    }
 
     public void setId1(Integer id1) {
         this.id1 = id1;

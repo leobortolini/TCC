@@ -8,7 +8,6 @@ package fila;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import tccmain.Jogador;
 
 /**
  *
@@ -55,6 +54,21 @@ public class ItemFila {
         return restantes.isEmpty();
     }
 
+    public String mostrar_restantes() {
+        String resultado = new String();
+        
+        for(Integer i : restantes) {
+            resultado = resultado.concat(" " + i);
+        }
+        
+        return resultado;
+    }
+    
+    public String mostrar_tudo() {
+        String resultado = new String();
+        return resultado.concat(mostrar_emparceiramentos()).concat(mostrar_restantes());
+    }
+    
     public String mostrar_emparceiramentos() {
         String resultado = new String();
 
@@ -74,6 +88,13 @@ public class ItemFila {
             return;
         }
         Collections.sort(restantes);
+    }
+    
+    public boolean contem_par(Par p) {
+        for(Par p1 : par) {
+            if(p1.igual(p)) return true;
+        }
+        return false;
     }
 
     public ArrayList<ItemFila> combinar(boolean grupo_debaixo) {

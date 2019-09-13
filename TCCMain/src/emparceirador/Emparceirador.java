@@ -12,7 +12,8 @@ import tccmain.Emparceiramento;
 import tccmain.Grupo;
 import tccmain.Jogador;
 
-/**  *
+/**
+ * *
  * @author neijo
  */
 public class Emparceirador {
@@ -64,9 +65,28 @@ public class Emparceirador {
         for (Grupo g : grupos) {
             Collections.sort(g.getJogadores(), jogador_por_id);
         }
+        ArrayList<Grupo> backup = new ArrayList<>(grupos);
         //nesse momento, os grupos já estão feitos, os grupos já conseguem escolher os seus emparceiramentos
         //falta agora, coordenar a ordem de emparceiramento dos grupos
-        
+        if (jogadores.size() % 2 != 0) {
+            bye = grupos.get(0).getJogadores().get(rodada);//tentar emparceirar o ultimo grupo, e o que sobrar dar bye      
+        }
+
+        int indice_medio = 0;
+
+        if (rodada != 1) {
+            //primeira rodada só emparceirar, o bye vai ser tratato no primeiro if apos o backup
+        }
+
+        for (Grupo g : grupos) {
+            if (g.getPontuacao() == (float) (rodada - 1) / 2) {
+                indice_medio = grupos.indexOf(g);
+            }
+        }
+        if (indice_medio == 0) {
+            int limite_superior = 0;
+
+        }
     }
 
     public boolean existe_grupo(float pont) {

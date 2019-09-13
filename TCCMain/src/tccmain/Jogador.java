@@ -148,4 +148,8 @@ public class Jogador {
     public boolean foi_bye() {
         return bye;
     }
+    
+    public void bye() {
+        bye = true;
+    }
 }
