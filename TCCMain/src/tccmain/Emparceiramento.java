@@ -13,15 +13,13 @@ import java.util.ArrayList;
  */
 public class Emparceiramento {
     private ArrayList<Partida> emparceiramentos;
-    private float pont;
     
     public Emparceiramento(){
         emparceiramentos = new ArrayList<>();
     }
     
-    public Emparceiramento(ArrayList<Partida> p, float pontuacao){
+    public Emparceiramento(ArrayList<Partida> p){
         emparceiramentos = new ArrayList<>(p);
-        pont = pontuacao;
     }
     
     public int tamanho(){
@@ -34,6 +32,14 @@ public class Emparceiramento {
     
     public void adicionar_partida(ArrayList<Partida> p){
         emparceiramentos.addAll(p);
+    }
+    
+    public void adicionar_partida(Emparceiramento p) {
+        emparceiramentos.addAll(p.getEmparceiramentos());
+    }
+    
+    public ArrayList<Partida> getEmparceiramentos() {
+        return emparceiramentos;
     }
     
     public boolean foi_emparceirado(int id_jogador){

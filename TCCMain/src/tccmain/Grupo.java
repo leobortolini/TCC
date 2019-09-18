@@ -11,23 +11,19 @@ import fila.Par;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Grupo {
 
     private ArrayList<Jogador> jogadores;
     private float pontuacao_grupo;
     private Emparceiramento partidas;
-    public static ArrayList<Jogador> movidos;
     private ArrayList<Par> pares_flutuantes;
     private ArrayList<Grupo> grupos_colapsados_cima;
     private ArrayList<Grupo> grupos_colapsados_baixo;
     private ArrayList<Jogador> jogadores_cima;
     private ArrayList<Jogador> jogadores_baixo;
     private ArrayList<Jogador> jogares_emparceirados_flut;
+    private Jogador flutuante;
 
     public Grupo(ArrayList<Jogador> j, float pont) {
         jogadores = j;
@@ -51,7 +47,7 @@ public class Grupo {
         jogadores_cima = new ArrayList<>();
         jogares_emparceirados_flut = new ArrayList<>();
     }
-    
+
     public void adiciona_jogador(Jogador j) {
         jogadores.add(j);
     }
@@ -99,6 +95,8 @@ public class Grupo {
                     && encontra_jogador(p.getId2()).preferencia_forte_pretas() == true)) {
                 //System.out.println("pref forte preta flutuante");
                 continue;
+            } else if (jogador.esta_no_historico(p.getId2())) {
+                continue; //aqui checa o historico usado pro Emparceirador
             }
             int pref_1 = jogador.checar_preferencia();
             int pref_2 = encontra_jogador(p.getId2()).checar_preferencia();
@@ -216,6 +214,8 @@ public class Grupo {
             return false;
         }
         pares_flutuantes.add(par_melhor);
+        flutuante = new Jogador(jogador);
+        flutuante.adicionar_no_historico(par_melhor);
         for (Jogador j : jogadores) {
             if (j.getId() == par_melhor.getId1()) {
                 jogares_emparceirados_flut.add(j);
@@ -228,6 +228,10 @@ public class Grupo {
             }
         }
         return conseguiu;
+    }
+    
+    public Jogador getFlutuanteAtualizado(){
+        return flutuante;
     }
 
     public Jogador encontra_jogador(int id) {
@@ -249,13 +253,14 @@ public class Grupo {
         jogadores.forEach((j) -> {
             lista_ids.add(j.getId());
         });
-        Fila fila = new Fila(lista_ids, grupo_debaixo); 
+        Fila fila = new Fila(lista_ids, grupo_debaixo);
+        int maximo = calcula_max_pont();
 
         partidas = new Emparceiramento();
         EmparceiramentoProposto x = new EmparceiramentoProposto();
         ArrayList<EmparceiramentoProposto> propostas = new ArrayList<>();
         int contador = 0;
-        while ((x = fila.obter_proximo_emparceiramento()) != null) { 
+        while ((x = fila.obter_proximo_emparceiramento()) != null) {
             contador++;
             ArrayList<Par> pares = x.obter_emparceiramentos();
             float pontuacao_emparceiramento = 0;
@@ -287,11 +292,11 @@ public class Grupo {
                 int pref_2 = encontra_jogador(p.getId2()).checar_preferencia();
                 //armazenar antes o valor de cada um, cuidar com as inversões que já foram feitas!
                 if (pref_1 == 2) {
-                    if (pref_2 < 0 || pref_2 == 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
+                    if (pref_2 < 0 || pref_2 == 0 && encontra_jogador(p.getId2()).UltimaCor('b')) {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
                         //System.out.println("1");
-                    } else if (pref_2 > 0 || encontra_jogador(p.getId2()).UltimaCor() == 'p') {
+                    } else if (pref_2 > 0 || encontra_jogador(p.getId2()).UltimaCor('p')) {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         //System.out.println("2");
                     }
@@ -309,56 +314,56 @@ public class Grupo {
                     continue;
                 } else if (pref_2 == 2) {
                     pares.set(pares.indexOf(p), p.inverter_cores());
-                    if (pref_1 < 0 || pref_1 == 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
+                    if (pref_1 < 0 || pref_1 == 0 && encontra_jogador(p.getId2()).UltimaCor('b')) {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
                         //System.out.println("5");
-                    } else if (pref_1 > 0 || encontra_jogador(p.getId2()).UltimaCor() == 'p') {
+                    } else if (pref_1 > 0 || encontra_jogador(p.getId2()).UltimaCor('p')) {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         //System.out.println("6");
                     }
                     continue;
                 } else if (pref_2 == -2) {
-                    if (pref_1 > 0 || pref_1 == 0 && encontra_jogador(p.getId1()).UltimaCor() == 'p') {
+                    if (pref_1 > 0 || pref_1 == 0 && encontra_jogador(p.getId1()).UltimaCor('p')) {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
                         //System.out.println("7");
-                    } else if (pref_1 < 0 || encontra_jogador(p.getId1()).UltimaCor() == 'b') {
+                    } else if (pref_1 < 0 || encontra_jogador(p.getId1()).UltimaCor('b')) {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
-                        //System.out.println("8");
+                        //  System.out.println("8");
                     }
                     continue;
                 }
                 //acima são tratados os casos de preferencia forte        
                 if (pref_1 > 0 && pref_2 < 0
-                        || pref_1 > 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b'
-                        || encontra_jogador(p.getId1()).UltimaCor() == 'p'
-                        && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
+                        || pref_1 > 0 && encontra_jogador(p.getId2()).UltimaCor('b')
+                        || encontra_jogador(p.getId1()).UltimaCor('p')
+                        && encontra_jogador(p.getId2()).UltimaCor('b')) {
                     pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                     pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
                     //System.out.println("9");
                 } else if (pref_2 > 0 && pref_1 < 0
-                        || pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p'
-                        || encontra_jogador(p.getId1()).UltimaCor() == 'b'
-                        && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
+                        || pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor('p')
+                        || encontra_jogador(p.getId1()).UltimaCor('b')
+                        && encontra_jogador(p.getId2()).UltimaCor('p')) {
                     pares.set(pares.indexOf(p), p.inverter_cores());
                     pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                     pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
                     //System.out.println("10");
                 } else {
-                    if (pref_1 > 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
+                    if (pref_1 > 0 && encontra_jogador(p.getId2()).UltimaCor('p')) {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         //System.out.println("11");
-                    } else if (pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
+                    } else if (pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor('b')) {
                         pares.set(pares.indexOf(p), p.inverter_cores());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
                         //System.out.println("12");
-                    } else if (encontra_jogador(p.getId1()).UltimaCor() == 'p'
-                            && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
+                    } else if (encontra_jogador(p.getId1()).UltimaCor('p')
+                            && encontra_jogador(p.getId2()).UltimaCor('p')) {
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId1());
                         //System.out.println("13");
-                    } else if (encontra_jogador(p.getId1()).UltimaCor() == 'b'
-                            && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
+                    } else if (encontra_jogador(p.getId1()).UltimaCor('b')
+                            && encontra_jogador(p.getId2()).UltimaCor('b')) {
                         pares.set(pares.indexOf(p), p.inverter_cores());
                         pontuacao_emparceiramento += calcula_valor(grupo_debaixo, qtde, p.getId2());
                         //System.out.println("14");
@@ -367,6 +372,9 @@ public class Grupo {
             }
             x.adicionar_pont(pontuacao_emparceiramento); //ver qual é a maior pontuaçao possivel
             propostas.add(x);
+            if (pontuacao_emparceiramento == maximo) {
+                break;
+            }
         }
         EmparceiramentoProposto melhor = new EmparceiramentoProposto();
 
@@ -376,24 +384,34 @@ public class Grupo {
             }
         }
         if (melhor.getPont() == 0) {
-            return null; 
+            return null;
         }
         melhor.adicionar_par(pares_flutuantes);
         melhor.mostrar_emparceiramentos();
         ArrayList<Partida> partidas_finais = new ArrayList<>();
-        
+
         for (Par p : melhor.obter_emparceiramentos()) {
             partidas_finais.add(transforma_partida(p));
         }
-        partidas = new Emparceiramento(partidas_finais, pontuacao_grupo);
+        partidas = new Emparceiramento(partidas_finais);
         System.out.println(contador);
         return partidas;
     }
 
-    public void unir_grupo(Grupo g, boolean de_baixo) {
-        for(Jogador j : g.getJogadores()) {
-            jogadores.add(new Jogador(j));
+    public int calcula_max_pont() {
+        int valor = 0;
+
+        for (int i = jogadores.size(); i > 0; i--) {
+            valor += i;
         }
+
+        return valor;
+    }
+
+    public void unir_grupo(Grupo g, boolean de_baixo) {
+        g.getJogadores().forEach((j) -> {
+            jogadores.add(new Jogador(j));
+        });
         if (de_baixo) {
             grupos_colapsados_baixo.add(g);
         }
@@ -404,62 +422,113 @@ public class Grupo {
         if (grupo_debaixo) {
             return jogadores.indexOf(encontra_jogador(id)) + 1;
         }
-        return (qtde - (jogadores.indexOf(encontra_jogador(id)) + 1));
+        return (jogadores.size() - (jogadores.indexOf(encontra_jogador(id))));
     }
 
     public Partida transforma_partida(Par p) {
         return new Partida(p.getId1(), p.getId2());
     }
 
-    public Jogador pior_pretas() {
+    public Jogador pior_pretas(boolean vai_descer) {
         Jogador rebaixado = null;
-
-        for (Jogador e : jogadores) {
-            if (e.checar_preferencia() > 0) {
-                rebaixado = e;
-                break;
-            }
-        }
-        if (rebaixado == null) {
+        if (vai_descer) {
             for (Jogador e : jogadores) {
-                if (e.UltimaCor() == 'b') {
+                if (e.checar_preferencia() > 0 && e.getFlutuacao() >= 0) {
                     rebaixado = e;
                     break;
                 }
             }
-        }
-        for (Jogador e : jogadores) {
-            if (e.checar_preferencia() > 0 || e.UltimaCor() == 'p') {
-                if (e.getId() > rebaixado.getId()) {
+            if (rebaixado == null) {
+                for (Jogador e : jogadores) {
+                    if (e.UltimaCor() == 'b' && e.getFlutuacao() >= 0) {
+                        rebaixado = e;
+                        break;
+                    }
+                }
+            }
+            for (Jogador e : jogadores) {
+                if (e.checar_preferencia() > 0 || e.UltimaCor() == 'p' && e.getFlutuacao() >= 0) {
+                    if (e.getId() > rebaixado.getId()) {
+                        rebaixado = e;
+                    }
+                }
+            }
+        } else {
+            for (Jogador e : jogadores) {
+                if (e.checar_preferencia() > 0 && e.getFlutuacao() <= 0) {
                     rebaixado = e;
+                    break;
+                }
+            }
+            if (rebaixado == null) {
+                for (Jogador e : jogadores) {
+                    if (e.UltimaCor() == 'b' && e.getFlutuacao() <= 0) {
+                        rebaixado = e;
+                        break;
+                    }
+                }
+            }
+            for (Jogador e : jogadores) {
+                if (e.checar_preferencia() > 0 || e.UltimaCor() == 'p' && e.getFlutuacao() <= 0) {
+                    if (e.getId() > rebaixado.getId()) {
+                        rebaixado = e;
+                    }
                 }
             }
         }
+
         return rebaixado;
     }
 
-    public Jogador pior_brancas() {
+    public Jogador pior_brancas(boolean vai_descer) {
         Jogador rebaixado = null;
 
-        for (Jogador e : jogadores) {
-            if (e.checar_preferencia() < 0) {
-                rebaixado = e;
-                break;
-            }
-        }
-        if (rebaixado == null) {
+        if (vai_descer) {
             for (Jogador e : jogadores) {
-                if (e.UltimaCor() == 'p') {
+                if (e.checar_preferencia() < 0 && e.getFlutuacao() >= 0 && !e.getTentativaFlutuar()) {
                     rebaixado = e;
                     break;
                 }
             }
-        }
+            if (rebaixado == null) {
+                for (Jogador e : jogadores) {
+                    if (e.UltimaCor() == 'p' && e.getFlutuacao() >= 0 && !e.getTentativaFlutuar()) {
+                        rebaixado = e;
+                        break;
+                    }
+                }
+            }
 
-        for (Jogador e : jogadores) {
-            if (e.checar_preferencia() < 0 || e.UltimaCor() == 'p') {
-                if (e.getId() > rebaixado.getId()) {
+            for (Jogador e : jogadores) {
+                if (e.checar_preferencia() < 0 || e.UltimaCor() == 'p' && e.getFlutuacao() >= 0 
+                        && !e.getTentativaFlutuar()) {
+                    if (e.getId() > rebaixado.getId()) {
+                        rebaixado = e;
+                    }
+                }
+            }
+        } else {
+            for (Jogador e : jogadores) {
+                if (e.checar_preferencia() < 0 && e.getFlutuacao() <= 0 && !e.getTentativaFlutuar()) {
                     rebaixado = e;
+                    break;
+                }
+            }
+            if (rebaixado == null) {
+                for (Jogador e : jogadores) {
+                    if (e.UltimaCor() == 'p' && e.getFlutuacao() <= 0 && !e.getTentativaFlutuar()) {
+                        rebaixado = e;
+                        break;
+                    }
+                }
+            }
+
+            for (Jogador e : jogadores) {
+                if (e.checar_preferencia() < 0 || e.UltimaCor() == 'p' && e.getFlutuacao() <= 0 
+                        && !e.getTentativaFlutuar()) {
+                    if (e.getId() > rebaixado.getId()) {
+                        rebaixado = e;
+                    }
                 }
             }
         }
@@ -493,17 +562,33 @@ public class Grupo {
         return jogadores.size();
     }
 
-    public Jogador encontra_rebaixado() {
+    public Jogador encontra_rebaixado(boolean vai_descer) {
         if (quantidade_jogadores() % 2 == 0) {
             return null;
         }
         if (preferencia_brancas() > preferencia_pretas()) {
-            Jogador j = pior_brancas();
+            Jogador j = pior_brancas(vai_descer);
+            if(j == null) return null;
             jogadores.remove(j);
             return j;
         }
-        Jogador j = pior_brancas();
+        Jogador j = pior_pretas(vai_descer);
+        if(j == null) return null;
         jogadores.remove(j);
+
+        return j;
+    }
+
+    public Jogador encontra_bye() {
+        Jogador j = new Jogador();
+
+        for (int i = jogadores.size() - 1; i > 0; i--) {
+            if (!jogadores.get(i).foi_bye()) {
+                j = jogadores.get(i);
+                jogadores.remove(j);
+                break;
+            }
+        }
         return j;
     }
 }
