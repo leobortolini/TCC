@@ -108,56 +108,111 @@ public class Emparceirador {
             System.out.println("nenhum jogador elegivel para bye");
         }
         Jogador variavel_flut = new Jogador();
-        Jogador variavel_flut_aux = new Jogador();
-        Jogador variavel_flut_proprio = new Jogador();
+        Jogador variavel_flut_aux;
+        Jogador variavel_flut_proprio;
+        Emparceiramento geral = new Emparceiramento();
 
         for (int i = 0; i < grupos_acima.size(); i++) {
-            while (true) {
-                if (variavel_flut.existe()) {
-                    if (grupos_acima.get(i).receber_flutuante(true, new Jogador(variavel_flut))) {
-                        variavel_flut_aux = grupos_acima.get(i).getFlutuanteAtualizado();
-                        variavel_flut = new Jogador();
-                        if (grupos_acima.get(i).getJogadores().size() % 2 != 0) {
-                            variavel_flut_proprio = grupos_acima.get(i).encontra_rebaixado(true);
-                            if (variavel_flut_proprio == null) {
-                                //colapsar
+            if (variavel_flut.existe()) {
+                if (grupos_acima.get(i).quantidade_jogadores() % 2 != 0) {
+                    while (true) {
+                        if (grupos_acima.get(i).receber_flutuante(true, variavel_flut)) {
+                            variavel_flut_aux = grupos_acima.get(i).getFlutuanteAtualizado();
+
+                            Emparceiramento x = grupos_acima.get(i).emparceirar_grupo(false);
+                            if (x != null) {
+                                geral.adicionar_partida(x);
+                                variavel_flut = new Jogador();
+                                variavel_flut_aux = new Jogador();
+                                break;
                             } else {
+                                grupos_acima.get(i).reiniciar_emp_flut();
+                                variavel_flut = variavel_flut_aux;
+                            }
+                        } else {
+                            grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                            variavel_flut.zerar_historico();
+                            grupos_acima.get(i + 1).adiciona_jogador(variavel_flut);
+                            break;
+                        }
+                    }
+                } else {
+                    boolean conseguiu = false;
+
+                    while (!conseguiu) {
+                        variavel_flut_proprio = grupos_acima.get(i).encontra_rebaixado_forcado(true);
+                        if (variavel_flut_proprio == null) {
+                            grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                            variavel_flut.zerar_historico();
+                            grupos_acima.get(i + 1).adiciona_jogador(variavel_flut);
+                            break;
+                        }
+                        variavel_flut_proprio.tentou_flutuar();
+                        while (true) {
+                            if (grupos_acima.get(i).receber_flutuante(true, variavel_flut)) {
+                                variavel_flut_aux = grupos_acima.get(i).getFlutuanteAtualizado();
+
                                 Emparceiramento x = grupos_acima.get(i).emparceirar_grupo(false);
-
-                                if (x == null) {
-                                    variavel_flut = variavel_flut_aux;
-                                    if (variavel_flut_proprio.existe()) {
-                                        grupos_acima.get(i).adiciona_jogador(variavel_flut_proprio);
-                                    }
+                                if (x != null) {
+                                    geral.adicionar_partida(x);
+                                    variavel_flut = new Jogador();
+                                    variavel_flut_aux = new Jogador();
+                                    conseguiu = true;
+                                    break;
                                 } else {
-
+                                    grupos_acima.get(i).reiniciar_emp_flut();
+                                    grupos_acima.get(i).adiciona_jogador(variavel_flut_proprio);
+                                    variavel_flut = variavel_flut_aux;
+                                    variavel_flut_proprio = new Jogador();
+                                    break;
                                 }
-                            }
-                        }
-                    } else {
-                        //aqui quer dizer que ninguem do grupo pode ser emparceirado com o flut que veio
-                        if(grupos_acima.get(i).getJogadores().size() % 2 != 0) {
-                            if(variavel_flut_proprio.existe()) {
+                            } else {
+                                variavel_flut.zerar_historico();
                                 grupos_acima.get(i).adiciona_jogador(variavel_flut_proprio);
+                                break;
                             }
-                            
                         }
+                    }
+                }
+            } else {
+                if (grupos_acima.get(i).quantidade_jogadores() % 2 != 0) {
+                    boolean conseguiu = false;
+
+                    while (!conseguiu) {
+                        variavel_flut_proprio = grupos_acima.get(i).encontra_rebaixado_forcado(true);
+                        if (variavel_flut_proprio == null) {
+                            grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                            break;
+                        }
+                        variavel_flut_proprio.tentou_flutuar();
+                        Emparceiramento x = grupos_acima.get(i).emparceirar_grupo(false);
+
+                        if (x != null) {
+                            geral.adicionar_partida(x);
+                            variavel_flut = new Jogador();
+                            variavel_flut_aux = new Jogador();
+                            conseguiu = true;
+                        } else {
+                            grupos_acima.get(i).adiciona_jogador(variavel_flut_proprio);
+                            variavel_flut_proprio = new Jogador();
+                        }
+                    }
+                } else {
+                    Emparceiramento x = grupos_acima.get(i).emparceirar_grupo(false);
+
+                    if (x != null) {
+                        geral.adicionar_partida(x);
+                        variavel_flut = new Jogador();
+                        variavel_flut_aux = new Jogador();
+                    } else {
+                        grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
                     }
                 }
             }
         }
-        //o flutuante do grupo só é trocado após ser confirmado que o flutuante que veio
-        //nao tem nenhum adversario do grupo atual possível, tanto pro flutuante que veio
-        //quanto para o grupo se emparceirar com os jogadores que restaram
     }
 
     public boolean existe_grupo(float pont) {
-        for (Grupo g : grupos) {
-            if (g.getPontuacao() == pont) {
-                return true;
-            }
-        }
-
-        return false;
+        return grupos.stream().anyMatch((g) -> (g.getPontuacao() == pont));
     }
 }

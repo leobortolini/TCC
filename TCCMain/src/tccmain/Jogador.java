@@ -55,7 +55,7 @@ public class Jogador {
         historico_tentativas_emp = new ArrayList<>();
         opcao_para_flutuar = false;
     }
-    
+
     public Jogador(int id, String cor, ArrayList<Integer> adv) {
         this.id = id;
         this.cores = cor;
@@ -84,52 +84,60 @@ public class Jogador {
         this.flutuacao = j.flutuacao;
         this.pontuacao = j.pontuacao;
         this.exist = true;
-        historico_tentativas_emp = new ArrayList<>();
+        historico_tentativas_emp = new ArrayList<>(j.historico_tentativas_emp);
         opcao_para_flutuar = false;
     }
 
-    public void tentou_flutuar(){
+    public void tentou_flutuar() {
         opcao_para_flutuar = true;
     }
-    
+
     public boolean getTentativaFlutuar() {
         return opcao_para_flutuar;
     }
-    
+
     public boolean adicionar_no_historico(Integer i) {
-        if(historico_tentativas_emp.size() > 0 && historico_tentativas_emp.get(0) == i){
+        if (historico_tentativas_emp.size() > 0 && historico_tentativas_emp.get(0) == i) {
             historico_tentativas_emp = new ArrayList<>();
-            
+
             return false;
         }
         historico_tentativas_emp.add(i);
-        
+
         return true;
     }
-    
+
+    public void zerar_historico() {
+        historico_tentativas_emp.clear();
+    }
+
     public void adicionar_no_historico(Par p) {
-        if(id == p.getId1()) {
+        if (id == p.getId1()) {
             historico_tentativas_emp.add(p.getId2());
         } else {
             historico_tentativas_emp.add(p.getId1());
         }
     }
-    
+
     public boolean esta_no_historico(int id) {
         return historico_tentativas_emp.contains(id);
     }
-    
-    public boolean existe(){
+
+    public boolean existe() {
         return exist;
     }
-    
+
     public char UltimaCor() {
-        if(cores.isEmpty()) return ' ';
+        if (cores.isEmpty()) {
+            return ' ';
+        }
         return cores.charAt(cores.length() - 1);
     }
-    
+
     public boolean UltimaCor(char c) {
-        if(cores.isEmpty()) return true; //ver se é pra retornar true ou false, qual é melhor
+        if (cores.isEmpty()) {
+            return true; //ver se é pra retornar true ou false, qual é melhor
+        }
         return cores.charAt(cores.length() - 1) == c;
     }
 
@@ -140,7 +148,7 @@ public class Jogador {
     public float getPontuacao() {
         return pontuacao;
     }
-    
+
     public int getFlutuacao() {
         return flutuacao;
     }
@@ -152,7 +160,9 @@ public class Jogador {
     }
 
     public boolean ultimas_duas_cores(char c) {
-        if(cores.length() < 2) return false;
+        if (cores.length() < 2) {
+            return false;
+        }
         return cores.charAt(cores.length() - 2) == cores.charAt(cores.length() - 1)
                 && cores.charAt(cores.length() - 1) == c;
     }
@@ -216,12 +226,12 @@ public class Jogador {
     public boolean foi_bye() {
         return bye;
     }
-    
+
     public void bye() {
         bye = true;
     }
-    
-    public void atualiza_flut(int i){
+
+    public void atualiza_flut(int i) {
         flutuacao += i;
     }
 }

@@ -229,8 +229,14 @@ public class Grupo {
         }
         return conseguiu;
     }
-    
-    public Jogador getFlutuanteAtualizado(){
+
+    public void reiniciar_emp_flut() {
+        jogadores.addAll(jogares_emparceirados_flut);
+        jogares_emparceirados_flut.clear();
+        pares_flutuantes.clear();
+    }
+
+    public Jogador getFlutuanteAtualizado() {
         return flutuante;
     }
 
@@ -419,6 +425,7 @@ public class Grupo {
     }
 
     public int calcula_valor(boolean grupo_debaixo, int qtde, int id) {
+        //multiplicar a pontuaçao pelos pontos obtidos do jogador
         if (grupo_debaixo) {
             return jogadores.indexOf(encontra_jogador(id)) + 1;
         }
@@ -524,7 +531,7 @@ public class Grupo {
             }
 
             for (Jogador e : jogadores) {
-                if (e.checar_preferencia() < 0 || e.UltimaCor() == 'p' && e.getFlutuacao() <= 0 
+                if ((e.checar_preferencia() < 0 || e.UltimaCor() == 'p') && e.getFlutuacao() <= 0 
                         && !e.getTentativaFlutuar()) {
                     if (e.getId() > rebaixado.getId()) {
                         rebaixado = e;
@@ -568,12 +575,50 @@ public class Grupo {
         }
         if (preferencia_brancas() > preferencia_pretas()) {
             Jogador j = pior_brancas(vai_descer);
-            if(j == null) return null;
+            if (j == null) {
+                return null;
+            }
             jogadores.remove(j);
             return j;
         }
         Jogador j = pior_pretas(vai_descer);
-        if(j == null) return null;
+        if (j == null) {
+            return null;
+        }
+        jogadores.remove(j);
+
+        return j;
+    }
+
+    public Jogador encontra_rebaixado_forcado(boolean vai_descer) {
+        Jogador j;
+        if (preferencia_brancas() > preferencia_pretas()) {
+            j = pior_brancas(vai_descer);
+            if (j == null) {
+                j = pior_pretas(vai_descer);
+                if (j == null) {
+                    if (vai_descer) {
+                        j = jogadores.get(jogadores.size() - 1);
+                    } else {
+                        j = jogadores.get(0);
+                    }
+                }
+            }
+            jogadores.remove(j);
+
+            return j;
+        }
+        j = pior_pretas(vai_descer);
+        if (j == null) {
+            j = pior_brancas(vai_descer);
+            if (j == null) {
+                if (vai_descer) {
+                    j = jogadores.get(jogadores.size() - 1);
+                } else {
+                    j = jogadores.get(0);
+                }
+            }
+        }
         jogadores.remove(j);
 
         return j;
