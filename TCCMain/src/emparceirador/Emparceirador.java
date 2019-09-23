@@ -66,11 +66,9 @@ public class Emparceirador {
             Collections.sort(g.getJogadores(), jogador_por_id);
         }
         ArrayList<Grupo> backup = new ArrayList<>(grupos);
-        //nesse momento, os grupos já estão feitos, os grupos já conseguem escolher os seus emparceiramentos
-        //falta agora, coordenar a ordem de emparceiramento dos grupos
         ArrayList<Grupo> grupos_acima = new ArrayList<>();
         ArrayList<Grupo> grupos_abaixo = new ArrayList<>();
-        Grupo grupo_medio;
+        Grupo grupo_medio = null;
 
         for (Grupo g : grupos) {
             if (g.getPontuacao() < (rodada - 1) / 2) {
@@ -114,12 +112,29 @@ public class Emparceirador {
 
         for (int i = 0; i < grupos_acima.size(); i++) {
             if (variavel_flut.existe()) {
+                if (grupos_acima.get(i).quantidade_jogadores() == 1) {
+                    variavel_flut.zerar_historico();
+                    if (i == grupos_acima.size() - 1) {
+                        if (grupo_medio == null) {
+                            grupos_abaixo.get(0).unir_grupo(grupos_acima.get(i), true);
+                            grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
+                        } else {
+                            grupo_medio.unir_grupo(grupos_acima.get(i), true);
+                            grupo_medio.adiciona_jogador(variavel_flut);
+                        }
+                    } else {
+                        grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                        grupos_acima.get(i + 1).adiciona_jogador(variavel_flut);
+                    }
+                    variavel_flut = new Jogador();
+                    break;
+                }
                 if (grupos_acima.get(i).quantidade_jogadores() % 2 != 0) {
                     while (true) {
                         if (grupos_acima.get(i).receber_flutuante(true, variavel_flut)) {
                             variavel_flut_aux = grupos_acima.get(i).getFlutuanteAtualizado();
-
                             Emparceiramento x = grupos_acima.get(i).emparceirar_grupo(false);
+
                             if (x != null) {
                                 geral.adicionar_partida(x);
                                 variavel_flut = new Jogador();
@@ -130,9 +145,20 @@ public class Emparceirador {
                                 variavel_flut = variavel_flut_aux;
                             }
                         } else {
-                            grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
                             variavel_flut.zerar_historico();
-                            grupos_acima.get(i + 1).adiciona_jogador(variavel_flut);
+                            if (i == grupos_acima.size() - 1) {
+                                if (grupo_medio == null) {
+                                    grupos_abaixo.get(0).unir_grupo(grupos_acima.get(i), true);
+                                    grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
+                                } else {
+                                    grupo_medio.unir_grupo(grupos_acima.get(i), true);
+                                    grupo_medio.adiciona_jogador(variavel_flut);
+                                }
+                            } else {
+                                grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                                grupos_acima.get(i + 1).adiciona_jogador(variavel_flut);
+                            }
+                            variavel_flut = new Jogador();
                             break;
                         }
                     }
@@ -142,20 +168,33 @@ public class Emparceirador {
                     while (!conseguiu) {
                         variavel_flut_proprio = grupos_acima.get(i).encontra_rebaixado_forcado(true);
                         if (variavel_flut_proprio == null) {
-                            grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
                             variavel_flut.zerar_historico();
-                            grupos_acima.get(i + 1).adiciona_jogador(variavel_flut);
+                            if (i == grupos_acima.size() - 1) {
+                                if (grupo_medio == null) {
+                                    grupos_abaixo.get(0).unir_grupo(grupos_acima.get(i), true);
+                                    grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
+                                } else {
+                                    grupo_medio.unir_grupo(grupos_acima.get(i), true);
+                                    grupo_medio.adiciona_jogador(variavel_flut);
+                                }
+                            } else {
+                                grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                                grupos_acima.get(i + 1).adiciona_jogador(variavel_flut);
+                            }
+                            variavel_flut = new Jogador();
                             break;
                         }
                         variavel_flut_proprio.tentou_flutuar();
                         while (true) {
                             if (grupos_acima.get(i).receber_flutuante(true, variavel_flut)) {
                                 variavel_flut_aux = grupos_acima.get(i).getFlutuanteAtualizado();
-
                                 Emparceiramento x = grupos_acima.get(i).emparceirar_grupo(false);
+
                                 if (x != null) {
                                     geral.adicionar_partida(x);
-                                    variavel_flut = new Jogador();
+                                    variavel_flut = variavel_flut_proprio;
+                                    variavel_flut.flutuou();
+                                    variavel_flut.atualiza_flut(-1);
                                     variavel_flut_aux = new Jogador();
                                     conseguiu = true;
                                     break;
@@ -175,13 +214,33 @@ public class Emparceirador {
                     }
                 }
             } else {
+                if (grupos_acima.get(i).quantidade_jogadores() == 1) {
+                    if (i == grupos_acima.size() - 1) {
+                        if (grupo_medio == null) {
+                            grupos_abaixo.get(0).unir_grupo(grupos_acima.get(i), true);
+                        } else {
+                            grupo_medio.unir_grupo(grupos_acima.get(i), true);
+                        }
+                    } else {
+                        grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                    }
+                    break;
+                }
                 if (grupos_acima.get(i).quantidade_jogadores() % 2 != 0) {
                     boolean conseguiu = false;
 
                     while (!conseguiu) {
                         variavel_flut_proprio = grupos_acima.get(i).encontra_rebaixado_forcado(true);
                         if (variavel_flut_proprio == null) {
-                            grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                            if (i == grupos_acima.size() - 1) {
+                                if (grupo_medio == null) {
+                                    grupos_abaixo.get(0).unir_grupo(grupos_acima.get(i), false);
+                                } else {
+                                    grupo_medio.unir_grupo(grupos_acima.get(i), false);
+                                }
+                            } else {
+                                grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                            }
                             break;
                         }
                         variavel_flut_proprio.tentou_flutuar();
@@ -189,7 +248,9 @@ public class Emparceirador {
 
                         if (x != null) {
                             geral.adicionar_partida(x);
-                            variavel_flut = new Jogador();
+                            variavel_flut = variavel_flut_proprio;
+                            variavel_flut.flutuou();
+                            variavel_flut.atualiza_flut(-1);
                             variavel_flut_aux = new Jogador();
                             conseguiu = true;
                         } else {
@@ -198,6 +259,17 @@ public class Emparceirador {
                         }
                     }
                 } else {
+                    if (grupos_acima.get(i).quantidade_jogadores() == 1) {
+                        if (i == grupos_acima.size() - 1) {
+                            if (grupo_medio == null) {
+                                grupos_abaixo.get(0).unir_grupo(grupos_acima.get(i), true);
+                            } else {
+                                grupo_medio.unir_grupo(grupos_acima.get(i), true);
+                            }
+                        } else {
+                            grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                        }
+                    }
                     Emparceiramento x = grupos_acima.get(i).emparceirar_grupo(false);
 
                     if (x != null) {
@@ -205,10 +277,260 @@ public class Emparceirador {
                         variavel_flut = new Jogador();
                         variavel_flut_aux = new Jogador();
                     } else {
-                        grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                        if (i == grupos_acima.size() - 1) {
+                            if (grupo_medio == null) {
+                                grupos_abaixo.get(0).unir_grupo(grupos_acima.get(i), true);
+                            } else {
+                                grupo_medio.unir_grupo(grupos_acima.get(i), true);
+                            }
+                        } else {
+                            grupos_acima.get(i + 1).unir_grupo(grupos_acima.get(i), false);
+                        }
                     }
                 }
             }
+        }
+        Jogador variavel_flut_baixo = new Jogador();
+
+        for (int i = grupos_abaixo.size() - 1; i >= 0; i--) {
+            if (variavel_flut_baixo.existe()) {
+                if (grupos_abaixo.get(i).quantidade_jogadores() == 1) {
+                    variavel_flut_baixo.zerar_historico();
+                    if (i == 0) {
+                        if (grupo_medio == null) {
+                            grupos_abaixo.get(i + 1).unir_grupo(grupos_abaixo.get(i), true);
+                            grupos_abaixo.get(i + 1).adiciona_jogador(variavel_flut_baixo);
+                            grupos_abaixo.get(i + 1).zerar_emparceiramentos_propostos();
+                            grupos_abaixo.remove(i);
+                            i++;
+                        } else {
+                            grupo_medio.unir_grupo(grupos_abaixo.get(i), true);
+                            grupo_medio.adiciona_jogador(variavel_flut_baixo);
+                        }
+                    } else {
+                        grupos_abaixo.get(i - 1).unir_grupo(grupos_abaixo.get(i), true);
+                        grupos_abaixo.get(i - 1).adiciona_jogador(variavel_flut_baixo);
+                    }
+                    variavel_flut_baixo = new Jogador();
+                    break;
+                }
+                if (grupos_abaixo.get(i).quantidade_jogadores() % 2 != 0) {
+                    while (true) {
+                        if (grupos_abaixo.get(i).receber_flutuante(false, variavel_flut_baixo)) {
+                            variavel_flut_aux = grupos_abaixo.get(i).getFlutuanteAtualizado();
+                            Emparceiramento x = grupos_abaixo.get(i).emparceirar_grupo(true);
+
+                            if (x != null) {
+                                grupos_abaixo.get(i).adiciona_jogador(variavel_flut_baixo);
+                                variavel_flut_baixo = new Jogador();
+                                variavel_flut_aux = new Jogador();
+                                break;
+                            } else {
+                                grupos_abaixo.get(i).reiniciar_emp_flut();
+                                variavel_flut_baixo = variavel_flut_aux;
+                            }
+                        } else {
+                            variavel_flut_baixo.zerar_historico();
+                            if (i == 0) {
+                                if (grupo_medio == null) {
+                                    grupos_abaixo.get(i + 1).unir_grupo(grupos_abaixo.get(i), true);
+                                    grupos_abaixo.get(i + 1).adiciona_jogador(variavel_flut_baixo);
+                                    grupos_abaixo.get(i + 1).zerar_emparceiramentos_propostos();
+                                    grupos_abaixo.remove(i);
+                                    i++;
+                                } else {
+                                    grupo_medio.unir_grupo(grupos_abaixo.get(i), true);
+                                    grupo_medio.adiciona_jogador(variavel_flut_baixo);
+                                }
+                            } else {
+                                grupos_abaixo.get(i - 1).unir_grupo(grupos_abaixo.get(i), true);
+                                grupos_abaixo.get(i - 1).adiciona_jogador(variavel_flut_baixo);
+                            }
+                            variavel_flut_baixo = new Jogador();
+                            break;
+                        }
+                    }
+                } else {
+                    boolean conseguiu = false;
+
+                    while (!conseguiu) {
+                        variavel_flut_proprio = grupos_abaixo.get(i).encontra_rebaixado_forcado(false);
+                        if (variavel_flut_proprio == null) {
+                            variavel_flut_baixo.zerar_historico();
+                            if (i == 0) {
+                                if (grupo_medio == null) {
+                                    grupos_abaixo.get(i + 1).unir_grupo(grupos_abaixo.get(i), true);
+                                    grupos_abaixo.get(i + 1).adiciona_jogador(variavel_flut_baixo);
+                                    grupos_abaixo.get(i + 1).zerar_emparceiramentos_propostos();
+                                    grupos_abaixo.remove(i);
+                                    i++;
+                                } else {
+                                    grupo_medio.unir_grupo(grupos_abaixo.get(i), true);
+                                    grupo_medio.adiciona_jogador(variavel_flut_baixo);
+                                }
+                            } else {
+                                grupos_abaixo.get(i - 1).unir_grupo(grupos_abaixo.get(i), true);
+                                grupos_abaixo.get(i - 1).adiciona_jogador(variavel_flut_baixo);
+                            }
+                            variavel_flut_baixo = new Jogador();
+                            break;
+                        }
+                        variavel_flut_proprio.tentou_flutuar();
+                        while (true) {
+                            if (grupos_abaixo.get(i).receber_flutuante(false, variavel_flut_baixo)) {
+                                variavel_flut_aux = grupos_abaixo.get(i).getFlutuanteAtualizado();
+
+                                Emparceiramento x = grupos_abaixo.get(i).emparceirar_grupo(true);
+                                if (x != null) {
+                                    grupos_abaixo.get(i).adiciona_jogador(variavel_flut_baixo);
+                                    variavel_flut_baixo = variavel_flut_proprio;
+                                    variavel_flut_baixo.flutuou();
+                                    variavel_flut_baixo.atualiza_flut(1);
+                                    variavel_flut_aux = new Jogador();
+                                    conseguiu = true;
+                                    break;
+                                } else {
+                                    grupos_abaixo.get(i).reiniciar_emp_flut();
+                                    grupos_abaixo.get(i).adiciona_jogador(variavel_flut_proprio);
+                                    variavel_flut_baixo = variavel_flut_aux;
+                                    variavel_flut_proprio = new Jogador();
+                                    break;
+                                }
+                            } else {
+                                variavel_flut_baixo.zerar_historico();
+                                grupos_abaixo.get(i).adiciona_jogador(variavel_flut_proprio);
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (grupos_abaixo.get(i).quantidade_jogadores() == 1) {
+                    if (i == 0) {
+                        if (grupo_medio == null) {
+                            grupos_abaixo.get(i + 1).unir_grupo(grupos_abaixo.get(i), true);
+                            grupos_abaixo.remove(i);
+                            i++;
+                        } else {
+                            grupo_medio.unir_grupo(grupos_abaixo.get(i), true);
+                        }
+                    } else {
+                        grupos_abaixo.get(i - 1).unir_grupo(grupos_abaixo.get(i), true);
+                    }
+                    break;
+                }
+                if (grupos_abaixo.get(i).quantidade_jogadores() % 2 != 0) {
+                    boolean conseguiu = false;
+
+                    while (!conseguiu) {
+                        variavel_flut_proprio = grupos_abaixo.get(i).encontra_rebaixado_forcado(false);
+                        if (variavel_flut_proprio == null) {
+                            if (i == 0) {
+                                if (grupo_medio == null) {
+                                    grupos_abaixo.get(i + 1).unir_grupo(grupos_abaixo.get(i), true);
+                                    grupos_abaixo.remove(i);
+                                    i++;
+                                } else {
+                                    grupo_medio.unir_grupo(grupos_abaixo.get(i), true);
+                                }
+                            } else {
+                                grupos_abaixo.get(i - 1).unir_grupo(grupos_abaixo.get(i), true);
+                            }
+                            break;
+                        }
+                        variavel_flut_proprio.tentou_flutuar();
+                        Emparceiramento x = grupos_abaixo.get(i).emparceirar_grupo(true);
+
+                        if (x != null) {
+                            geral.adicionar_partida(x);
+                            variavel_flut_baixo = variavel_flut_proprio;
+                            variavel_flut_baixo.flutuou();
+                            variavel_flut_baixo.atualiza_flut(1);
+                            variavel_flut_aux = new Jogador();
+                            conseguiu = true;
+                        } else {
+                            grupos_abaixo.get(i).adiciona_jogador(variavel_flut_proprio);
+                            variavel_flut_proprio = new Jogador();
+                        }
+                    }
+                } else {
+                    Emparceiramento x = grupos_acima.get(i).emparceirar_grupo(true);
+
+                    if (x != null) {
+                        geral.adicionar_partida(x);
+                        variavel_flut_baixo = new Jogador();
+                        variavel_flut_aux = new Jogador();
+                    } else {
+                        if (i == 0) {
+                            if (grupo_medio == null) {
+                                grupos_abaixo.get(i + 1).unir_grupo(grupos_abaixo.get(i), true);
+                                grupos_abaixo.remove(i);
+                                i++;
+                            } else {
+                                grupo_medio.unir_grupo(grupos_abaixo.get(i), true);
+                            }
+                        } else {
+                            grupos_abaixo.get(i - 1).unir_grupo(grupos_abaixo.get(i), true);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (grupo_medio != null) {
+            Emparceiramento x = null;
+
+            if (variavel_flut.existe()) {
+                if (variavel_flut_baixo.existe()) {
+                    grupo_medio.adiciona_jogador(variavel_flut);
+                    grupo_medio.adiciona_jogador(variavel_flut_baixo);
+                    x = grupo_medio.emparceirar_grupo(false);
+
+                    if (x == null) {
+                        grupos_abaixo.get(0).unir_grupo(grupo_medio, true);
+                        grupos_abaixo.get(0).zerar_emparceiramentos_propostos();
+                        grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
+                        grupos_abaixo.get(0).adiciona_jogador(variavel_flut_baixo);
+                        x = grupos_abaixo.get(0).emparceirar_grupo(false);
+                    }
+                } else {
+                    if (grupo_medio.receber_flutuante(true, variavel_flut)) {
+                        x = grupo_medio.emparceirar_grupo(false);
+                        if (x == null) {
+                            grupos_abaixo.get(0).unir_grupo(grupo_medio, true);
+                            grupos_abaixo.get(0).zerar_emparceiramentos_propostos();
+                            grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
+                            x = grupos_abaixo.get(0).emparceirar_grupo(false);
+                        }
+                    } else {
+                        grupos_abaixo.get(0).unir_grupo(grupo_medio, true);
+                        grupos_abaixo.get(0).zerar_emparceiramentos_propostos();
+                        grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
+                        x = grupos_abaixo.get(0).emparceirar_grupo(false);
+                    }
+                }
+            } else if (variavel_flut_baixo.existe()) {
+                if (grupo_medio.receber_flutuante(false, variavel_flut_baixo)) {
+                    x = grupo_medio.emparceirar_grupo(false);
+                    if (x == null) {
+                        grupos_abaixo.get(0).unir_grupo(grupo_medio, true);
+                        grupos_abaixo.get(0).zerar_emparceiramentos_propostos();
+                        grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
+                        x = grupos_abaixo.get(0).emparceirar_grupo(false);
+                    }
+                } else {
+                    grupos_abaixo.get(0).unir_grupo(grupo_medio, true);
+                    grupos_abaixo.get(0).zerar_emparceiramentos_propostos();
+                    grupos_abaixo.get(0).adiciona_jogador(variavel_flut_baixo);
+                    x = grupos_abaixo.get(0).emparceirar_grupo(false);
+                }
+            }
+            grupos_abaixo.forEach((g) -> {
+                geral.adicionar_partida(g.partidas());
+            });
+            System.out.println(geral.mostrar_partidas());
+            System.out.println("Bye: " + bye.toString());
         }
     }
 

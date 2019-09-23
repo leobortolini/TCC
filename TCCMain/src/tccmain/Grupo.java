@@ -404,6 +404,18 @@ public class Grupo {
         return partidas;
     }
 
+    public void zerar_jogadores() {
+        jogadores.clear();
+    }
+    
+    public void zerar_emparceiramentos_propostos() {
+        partidas = new Emparceiramento();
+    }
+    
+    public Emparceiramento partidas(){
+        return partidas;
+    }
+    
     public int calcula_max_pont() {
         int valor = 0;
 
@@ -591,7 +603,7 @@ public class Grupo {
     }
 
     public Jogador encontra_rebaixado_forcado(boolean vai_descer) {
-        Jogador j;
+        Jogador j = null;
         if (preferencia_brancas() > preferencia_pretas()) {
             j = pior_brancas(vai_descer);
             if (j == null) {

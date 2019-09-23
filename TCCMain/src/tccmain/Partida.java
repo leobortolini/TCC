@@ -21,7 +21,6 @@ public class Partida {
     }
     
     public Partida(Integer id1, Integer id2) {
-        
     }
     
     public Jogador get1() {
@@ -34,5 +33,10 @@ public class Partida {
     
     public boolean esta_emparceirado(Integer id){
         return j1.getId() == id || j2.getId() == id;
+    }
+    
+    @Override
+    public String toString() {
+        return j1.getId() + " x " + j2.getId() + "\n";
     }
 }

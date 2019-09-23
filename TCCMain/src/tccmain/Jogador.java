@@ -234,4 +234,13 @@ public class Jogador {
     public void atualiza_flut(int i) {
         flutuacao += i;
     }
+    
+    public void flutuou(){
+        opcao_para_flutuar = false;
+    }
+    
+    @Override
+    public String toString() {
+        return "" + id;
+    }
 }

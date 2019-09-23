@@ -52,4 +52,13 @@ public class Emparceiramento {
         }
         return achou;
     }
+    
+    public String mostrar_partidas() {
+        String x = new String();
+        
+        for(Partida p  : emparceiramentos) {
+            x = x.concat(p.toString());
+        }
+        return x;
+    }
 }
