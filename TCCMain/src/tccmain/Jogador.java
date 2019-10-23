@@ -36,6 +36,17 @@ public class Jogador {
         historico_tentativas_emp = new ArrayList<>();
         opcao_para_flutuar = false;
     }
+    
+    public Jogador(int id, String cor, float pont) {
+        this.id = id;
+        this.cores = cor;
+        pontuacao = pont;
+        adversarios = new ArrayList<>();
+        bye = false;
+        flutuacao = 0;
+        historico_tentativas_emp = new ArrayList<>();
+        opcao_para_flutuar = false;
+    }
 
     public Jogador() {
         adversarios = new ArrayList<>();
@@ -188,11 +199,6 @@ public class Jogador {
     }
 
     public int checar_preferencia() {
-        if (ultimas_duas_cores('p')) {
-            return 2;
-        } else if (ultimas_duas_cores('b')) {
-            return -2;
-        }
         int pref = 0;
 
         for (int i = 0; i < cores.length(); i++) {

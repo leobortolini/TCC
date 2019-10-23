@@ -16,11 +16,11 @@ public class Partida {
     public Partida(Jogador jo1, Jogador jo2){
         this.j1 = jo1;
         this.j2 = jo2;
-        j1.adicionar_cor("b");
-        j2.adicionar_cor("p");
     }
     
     public Partida(Integer id1, Integer id2) {
+        j1 = new Jogador(id1);
+        j2 = new Jogador(id2);
     }
     
     public Jogador get1() {

@@ -246,7 +246,21 @@ public class Grupo {
                 return j;
             }
         }
-
+        for (Jogador j : jogares_emparceirados_flut) {
+            if (j.getId() == id) {
+                return j;
+            }
+        }
+        for (Jogador j : jogadores_cima) {
+            if (j.getId() == id) {
+                return j;
+            }
+        }
+        for (Jogador j : jogadores_baixo) {
+            if (j.getId() == id) {
+                return j;
+            }
+        }
         return null;
     }
 
@@ -407,15 +421,15 @@ public class Grupo {
     public void zerar_jogadores() {
         jogadores.clear();
     }
-    
+
     public void zerar_emparceiramentos_propostos() {
         partidas = new Emparceiramento();
     }
-    
-    public Emparceiramento partidas(){
+
+    public Emparceiramento partidas() {
         return partidas;
     }
-    
+
     public int calcula_max_pont() {
         int valor = 0;
 
@@ -445,52 +459,62 @@ public class Grupo {
     }
 
     public Partida transforma_partida(Par p) {
-        return new Partida(p.getId1(), p.getId2());
+        return new Partida(encontra_jogador(p.getId1()), encontra_jogador(p.getId2()));
     }
 
     public Jogador pior_pretas(boolean vai_descer) {
         Jogador rebaixado = null;
         if (vai_descer) {
-            for (Jogador e : jogadores) {
-                if (e.checar_preferencia() > 0 && e.getFlutuacao() >= 0) {
+            for (int i = jogadores.size() - 1; i >= 0; i--) {
+                Jogador e = jogadores.get(i);
+                if (e.checar_preferencia() < 0 && e.getFlutuacao() >= 0) {
                     rebaixado = e;
-                    break;
+                    return rebaixado;
                 }
             }
             if (rebaixado == null) {
-                for (Jogador e : jogadores) {
+                for (int i = jogadores.size() - 1; i >= 0; i--) {
+                Jogador e = jogadores.get(i);
+                
                     if (e.UltimaCor() == 'b' && e.getFlutuacao() >= 0) {
                         rebaixado = e;
-                        break;
+                        return rebaixado;
                     }
                 }
             }
-            for (Jogador e : jogadores) {
-                if (e.checar_preferencia() > 0 || e.UltimaCor() == 'p' && e.getFlutuacao() >= 0) {
+            for (int i = jogadores.size() - 1; i >= 0; i--) {
+                Jogador e = jogadores.get(i);
+            
+                if (e.checar_preferencia() < 0 || e.UltimaCor() == 'p' && e.getFlutuacao() >= 0) {
                     if (e.getId() > rebaixado.getId()) {
                         rebaixado = e;
+                        return rebaixado;
                     }
                 }
             }
         } else {
-            for (Jogador e : jogadores) {
-                if (e.checar_preferencia() > 0 && e.getFlutuacao() <= 0) {
+           for (Jogador e : jogadores) {
+
+                if (e.checar_preferencia() < 0 && e.getFlutuacao() <= 0) {
                     rebaixado = e;
-                    break;
+                    return rebaixado;
                 }
             }
             if (rebaixado == null) {
                 for (Jogador e : jogadores) {
+
                     if (e.UltimaCor() == 'b' && e.getFlutuacao() <= 0) {
                         rebaixado = e;
-                        break;
+                        return rebaixado;
                     }
                 }
             }
             for (Jogador e : jogadores) {
-                if (e.checar_preferencia() > 0 || e.UltimaCor() == 'p' && e.getFlutuacao() <= 0) {
+
+                if (e.checar_preferencia() < 0 || e.UltimaCor() == 'p' && e.getFlutuacao() <= 0) {
                     if (e.getId() > rebaixado.getId()) {
                         rebaixado = e;
+                        return rebaixado;
                     }
                 }
             }
@@ -503,50 +527,58 @@ public class Grupo {
         Jogador rebaixado = null;
 
         if (vai_descer) {
-            for (Jogador e : jogadores) {
-                if (e.checar_preferencia() < 0 && e.getFlutuacao() >= 0 && !e.getTentativaFlutuar()) {
+            for (int i = jogadores.size() - 1; i >= 0; i--) {
+                Jogador e = jogadores.get(i);
+
+                if (e.checar_preferencia() > 0 && e.getFlutuacao() >= 0 && !e.getTentativaFlutuar()) {
                     rebaixado = e;
-                    break;
+                    return rebaixado;
                 }
             }
             if (rebaixado == null) {
-                for (Jogador e : jogadores) {
+                for (int i = jogadores.size() - 1; i >= 0; i--) {
+                    Jogador e = jogadores.get(i);
                     if (e.UltimaCor() == 'p' && e.getFlutuacao() >= 0 && !e.getTentativaFlutuar()) {
                         rebaixado = e;
-                        break;
+                        return rebaixado;
                     }
                 }
             }
+            for (int i = jogadores.size() - 1; i >= 0; i--) {
+                Jogador e = jogadores.get(i);
 
-            for (Jogador e : jogadores) {
-                if (e.checar_preferencia() < 0 || e.UltimaCor() == 'p' && e.getFlutuacao() >= 0 
+                if (e.checar_preferencia() > 0 || e.UltimaCor() == 'p' && e.getFlutuacao() >= 0
                         && !e.getTentativaFlutuar()) {
                     if (e.getId() > rebaixado.getId()) {
-                        rebaixado = e;
+                        return rebaixado;
                     }
                 }
             }
         } else {
             for (Jogador e : jogadores) {
-                if (e.checar_preferencia() < 0 && e.getFlutuacao() <= 0 && !e.getTentativaFlutuar()) {
+
+                if (e.checar_preferencia() > 0 && e.getFlutuacao() <= 0 && !e.getTentativaFlutuar()) {
                     rebaixado = e;
-                    break;
+                    return rebaixado;
                 }
             }
             if (rebaixado == null) {
-                for (Jogador e : jogadores) {
+               for (Jogador e : jogadores) {
+
                     if (e.UltimaCor() == 'p' && e.getFlutuacao() <= 0 && !e.getTentativaFlutuar()) {
                         rebaixado = e;
-                        break;
+                        return rebaixado;
                     }
                 }
             }
 
             for (Jogador e : jogadores) {
-                if ((e.checar_preferencia() < 0 || e.UltimaCor() == 'p') && e.getFlutuacao() <= 0 
+
+                if ((e.checar_preferencia() > 0 || e.UltimaCor() == 'p') && e.getFlutuacao() <= 0
                         && !e.getTentativaFlutuar()) {
                     if (e.getId() > rebaixado.getId()) {
                         rebaixado = e;
+                        return rebaixado;
                     }
                 }
             }
@@ -559,7 +591,9 @@ public class Grupo {
         int preferencia = 0;
 
         for (Jogador jogadore : jogadores) {
-            if (jogadore.checar_preferencia() > 0 || jogadore.UltimaCor() == 'b') {
+            if (jogadore.checar_preferencia() < 0) {
+                preferencia++;
+            } else if (jogadore.checar_preferencia() == 0 && jogadore.UltimaCor() == 'b') {
                 preferencia++;
             }
         }
@@ -570,7 +604,9 @@ public class Grupo {
         int preferencia = 0;
 
         for (Jogador jogadore : jogadores) {
-            if (jogadore.checar_preferencia() < 0 || jogadore.UltimaCor() == 'p') {
+            if (jogadore.checar_preferencia() > 0) {
+                preferencia++;
+            } else if (jogadore.checar_preferencia() == 0 && jogadore.UltimaCor('p')) {
                 preferencia++;
             }
         }
@@ -604,6 +640,9 @@ public class Grupo {
 
     public Jogador encontra_rebaixado_forcado(boolean vai_descer) {
         Jogador j = null;
+        int pref_br = preferencia_brancas();
+        int pref_pr = preferencia_pretas();
+
         if (preferencia_brancas() > preferencia_pretas()) {
             j = pior_brancas(vai_descer);
             if (j == null) {

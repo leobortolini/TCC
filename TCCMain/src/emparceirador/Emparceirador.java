@@ -31,18 +31,26 @@ public class Emparceirador {
         rodada = 0;
     }
 
-    public Emparceirador(ArrayList<Grupo> grupos) {
+    public Emparceirador(ArrayList<Jogador> jogadores) {
+        this.grupos = new ArrayList<>();
+        this.jogadores = new ArrayList<>(jogadores);
+        emparceiramentos_finais = new ArrayList<>();
+        rodada = 0;
+        bye = new Jogador();
+    }
+
+    /*public Emparceirador(ArrayList<Grupo> grupos) {
         this.grupos = new ArrayList<>(grupos);
         jogadores = new ArrayList<>();
         emparceiramentos_finais = new ArrayList<>();
         rodada = 0;
-    }
-
+    }*/
     public void adicionar_jogador(Jogador j) {
         jogadores.add(j);
     }
 
     public void iniciar_combinacao() {
+        rodada = 2; //para testes
         rodada++;
         for (Jogador j : jogadores) {
             if (existe_grupo(j.getPontuacao())) {
@@ -59,7 +67,7 @@ public class Emparceirador {
         Comparator<Jogador> jogador_por_id = (Jogador j1, Jogador j2)
                 -> j1.getId() - j2.getId();
         Comparator<Grupo> grupo_por_pontuacao = (Grupo g1, Grupo g2)
-                -> (int) ((g1.getPontuacao() * 10) - (g2.getPontuacao() * 10));
+                -> (int) ((g2.getPontuacao() * 10) - (g1.getPontuacao() * 10));
 
         Collections.sort(grupos, grupo_por_pontuacao);
         for (Grupo g : grupos) {
@@ -81,7 +89,7 @@ public class Emparceirador {
         }
         //tentativa de encontrar bye nos grupos abaixo do g medio
         if (jogadores.size() % 2 != 0) {
-            for (int i = grupos_abaixo.size() - 1; i > 0; i--) {
+            for (int i = grupos_abaixo.size() - 1; i >= 0; i--) {
                 bye = grupos_abaixo.get(i).encontra_bye();
                 if (!bye.existe()) {
                     System.out.println("bye nao encontrado nesse grupo");
@@ -89,22 +97,23 @@ public class Emparceirador {
                     break;
                 }
             }
-        }
-        //tentativa de encontrar bye nos grupos de cima
-        if (!bye.existe()) {
-            for (Grupo g : grupos_acima) {
-                bye = g.encontra_bye();
-                if (!bye.existe()) {
-                    System.out.println("bye nao encontrado grupo acima");
-                } else {
-                    break;
+            if (!bye.existe()) {
+                for (Grupo g : grupos_acima) {
+                    bye = g.encontra_bye();
+                    if (!bye.existe()) {
+                        System.out.println("bye nao encontrado grupo acima");
+                    } else {
+                        break;
+                    }
                 }
             }
+            //o bye nao foi procurado no grupo médio ainda
+            if (!bye.existe()) {
+                System.out.println("nenhum jogador elegivel para bye");
+            }
         }
-        //o bye nao foi procurado no grupo médio ainda
-        if (!bye.existe()) {
-            System.out.println("nenhum jogador elegivel para bye");
-        }
+        //tentativa de encontrar bye nos grupos de cima
+
         Jogador variavel_flut = new Jogador();
         Jogador variavel_flut_aux;
         Jogador variavel_flut_proprio;
@@ -442,7 +451,7 @@ public class Emparceirador {
                         Emparceiramento x = grupos_abaixo.get(i).emparceirar_grupo(true);
 
                         if (x != null) {
-                            geral.adicionar_partida(x);
+                            //geral.adicionar_partida(x);
                             variavel_flut_baixo = variavel_flut_proprio;
                             variavel_flut_baixo.flutuou();
                             variavel_flut_baixo.atualiza_flut(1);
@@ -454,10 +463,10 @@ public class Emparceirador {
                         }
                     }
                 } else {
-                    Emparceiramento x = grupos_acima.get(i).emparceirar_grupo(true);
+                    Emparceiramento x = grupos_abaixo.get(i).emparceirar_grupo(true);
 
                     if (x != null) {
-                        geral.adicionar_partida(x);
+                        //geral.adicionar_partida(x);
                         variavel_flut_baixo = new Jogador();
                         variavel_flut_aux = new Jogador();
                     } else {
@@ -525,6 +534,16 @@ public class Emparceirador {
                     grupos_abaixo.get(0).adiciona_jogador(variavel_flut_baixo);
                     x = grupos_abaixo.get(0).emparceirar_grupo(false);
                 }
+            } else {
+                x = grupo_medio.emparceirar_grupo(false);
+                    if (x == null) {
+                        grupos_abaixo.get(0).unir_grupo(grupo_medio, true);
+                        grupos_abaixo.get(0).zerar_emparceiramentos_propostos();
+                        grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
+                        x = grupos_abaixo.get(0).emparceirar_grupo(false);
+                    } else {
+                        geral.adicionar_partida(x);
+                    }
             }
             grupos_abaixo.forEach((g) -> {
                 geral.adicionar_partida(g.partidas());
