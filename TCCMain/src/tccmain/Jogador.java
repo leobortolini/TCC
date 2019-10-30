@@ -36,12 +36,24 @@ public class Jogador {
         historico_tentativas_emp = new ArrayList<>();
         opcao_para_flutuar = false;
     }
-    
+
     public Jogador(int id, String cor, float pont) {
         this.id = id;
         this.cores = cor;
         pontuacao = pont;
         adversarios = new ArrayList<>();
+        bye = false;
+        flutuacao = 0;
+        historico_tentativas_emp = new ArrayList<>();
+        opcao_para_flutuar = false;
+    }
+
+    public Jogador(int id, String cor, float pont, Integer... adv) {
+        this.id = id;
+        this.cores = cor;
+        pontuacao = pont;
+        adversarios = new ArrayList<>();
+        adversarios.addAll(Arrays.asList(adv));
         bye = false;
         flutuacao = 0;
         historico_tentativas_emp = new ArrayList<>();
@@ -240,11 +252,67 @@ public class Jogador {
     public void atualiza_flut(int i) {
         flutuacao += i;
     }
-    
-    public void flutuou(){
+
+    public void flutuou() {
         opcao_para_flutuar = false;
     }
+
+    public boolean quer_brancas() {
+        if (checar_preferencia() > 0) {
+            return true;
+        }
+        if (checar_preferencia() == 0) {
+            if (ultimas_duas_cores('b')) {
+                return false;
+            } else if (ultimas_duas_cores('p')) {
+                return true;
+            }
+            return UltimaCor('p');
+        }
+        return false;
+    }
     
+    public boolean quer_pretas() {
+        if (checar_preferencia() < 0) {
+            return true;
+        }
+        if (checar_preferencia() == 0) {
+            if (ultimas_duas_cores('p')) {
+                return false;
+            } else if (ultimas_duas_cores('b')) {
+                return true;
+            }
+            return UltimaCor('b');
+        }
+        return false;
+    }
+
+    public void adicionar_pont(float x) {
+        pontuacao += x;
+    }
+
+    public void adicionar_cor(char c) {
+        cores = cores.concat("" + c);
+    }
+
+    public void atualizar_hist(Partida p) {
+        if (p.get1().getId() == this.id) {
+            cores = cores.concat("b");
+            adversarios.add(p.get2().getId());
+        } else {
+            adversarios.add(p.get1().getId());
+            cores = cores.concat("p");
+        }
+    }
+
+    public void adicionar_oponente(Integer id) {
+        adversarios.add(id);
+    }
+
+    public String getCores() {
+        return cores;
+    }
+
     @Override
     public String toString() {
         return "" + id;

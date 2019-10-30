@@ -8,9 +8,11 @@ package emparceirador;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Scanner;
 import tccmain.Emparceiramento;
 import tccmain.Grupo;
 import tccmain.Jogador;
+import tccmain.Partida;
 
 /**
  * *
@@ -528,28 +530,43 @@ public class Emparceirador {
                         grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
                         x = grupos_abaixo.get(0).emparceirar_grupo(false);
                     }
+                    geral.adicionar_partida(x);
                 } else {
                     grupos_abaixo.get(0).unir_grupo(grupo_medio, true);
                     grupos_abaixo.get(0).zerar_emparceiramentos_propostos();
                     grupos_abaixo.get(0).adiciona_jogador(variavel_flut_baixo);
                     x = grupos_abaixo.get(0).emparceirar_grupo(false);
+                    geral.adicionar_partida(x);
                 }
             } else {
                 x = grupo_medio.emparceirar_grupo(false);
-                    if (x == null) {
-                        grupos_abaixo.get(0).unir_grupo(grupo_medio, true);
-                        grupos_abaixo.get(0).zerar_emparceiramentos_propostos();
-                        grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
-                        x = grupos_abaixo.get(0).emparceirar_grupo(false);
-                    } else {
-                        geral.adicionar_partida(x);
-                    }
+                if (x == null) {
+                    grupos_abaixo.get(0).unir_grupo(grupo_medio, true);
+                    grupos_abaixo.get(0).zerar_emparceiramentos_propostos();
+                    grupos_abaixo.get(0).adiciona_jogador(variavel_flut);
+                    x = grupos_abaixo.get(0).emparceirar_grupo(false);
+                    geral.adicionar_partida(x);
+                }
             }
             grupos_abaixo.forEach((g) -> {
                 geral.adicionar_partida(g.partidas());
             });
             System.out.println(geral.mostrar_partidas());
             System.out.println("Bye: " + bye.toString());
+        }
+        Scanner x = new Scanner(System.in);
+        ArrayList<Jogador> aux_jogador = new ArrayList<>(jogadores.size());
+        
+        System.out.println("----------");
+        for(Partida p : geral.getEmparceiramentos()) {
+            System.out.print(p.toString() + " ");
+            p.adicionar_resultado(x.nextInt());
+            aux_jogador.add(p.get1());
+            aux_jogador.add(p.get2());
+        }
+        jogadores = new ArrayList<>(aux_jogador); //colocar bye também
+        for(Jogador j :jogadores) {
+            System.out.println(j.getId() + "(" + j.getPontuacao() + ")" + ": " + j.getCores());
         }
     }
 

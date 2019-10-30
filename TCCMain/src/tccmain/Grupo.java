@@ -136,10 +136,10 @@ public class Grupo {
                 p = p.inverter_cores();
                 if (pref_1 < 0 || pref_1 == 0 && jogador.UltimaCor() == 'b') {
                     pontuacao_par_atual += 1000;
-                    pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId2());
+                    pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId1());
                     //System.out.println("5");
                 } else if (pref_1 > 0 || jogador.UltimaCor() == 'p') {
-                    pontuacao_par_atual += 0;
+                    pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId1());
                     //System.out.println("6");
                 }
                 if (pontuacao_par_atual > pontuacao_par_melhor) {
@@ -173,7 +173,7 @@ public class Grupo {
                 pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId2());
                 //System.out.println("9");
             } else if (pref_2 > 0 && pref_1 < 0
-                    || pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p'
+                    || pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p' //ARRUMAR, checar só por preferencia depois pelas cores
                     || jogador.UltimaCor() == 'b'
                     && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
                 p = p.inverter_cores();
@@ -640,7 +640,7 @@ public class Grupo {
 
     public Jogador encontra_rebaixado_forcado(boolean vai_descer) {
         Jogador j = null;
-        int pref_br = preferencia_brancas();
+        int pref_br = preferencia_brancas(); //excluir depois que depurar
         int pref_pr = preferencia_pretas();
 
         if (preferencia_brancas() > preferencia_pretas()) {
