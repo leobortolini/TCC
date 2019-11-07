@@ -102,11 +102,11 @@ public class Grupo {
             int pref_2 = encontra_jogador(p.getId2()).checar_preferencia();
             //armazenar antes o valor de cada um, cuidar com as inversões que já foram feitas!
             if (pref_1 == 2) {
-                if (pref_2 < 0 || pref_2 == 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
+                if (encontra_jogador(p.getId2()).quer_pretas()) {
                     pontuacao_par_atual += 1000;
                     pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId2());
                     //System.out.println("1");
-                } else if (pref_2 > 0 || encontra_jogador(p.getId2()).UltimaCor() == 'p') {
+                } else if (encontra_jogador(p.getId2()).quer_brancas()) {
                     pontuacao_par_atual += 1000;
                     //System.out.println("2");
                 }
@@ -118,11 +118,11 @@ public class Grupo {
                 continue;
             } else if (pref_1 == -2) {
                 p = p.inverter_cores();
-                if (pref_2 > 0 || pref_2 == 0 && encontra_jogador(p.getId1()).UltimaCor() == 'p') {
+                if (encontra_jogador(p.getId1()).quer_brancas()) {
                     pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId1());
                     pontuacao_par_atual += 1000;
                     //System.out.println("3");
-                } else if (pref_2 < 0 || encontra_jogador(p.getId1()).UltimaCor() == 'b') {
+                } else if (encontra_jogador(p.getId1()).quer_pretas()) {
                     pontuacao_par_atual += 1000;
                     //System.out.println("4");
                 }
@@ -134,11 +134,11 @@ public class Grupo {
                 continue;
             } else if (pref_2 == 2) {
                 p = p.inverter_cores();
-                if (pref_1 < 0 || pref_1 == 0 && jogador.UltimaCor() == 'b') {
+                if (jogador.quer_pretas()) {
                     pontuacao_par_atual += 1000;
                     pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId1());
                     //System.out.println("5");
-                } else if (pref_1 > 0 || jogador.UltimaCor() == 'p') {
+                } else if (jogador.quer_brancas()) {
                     pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId1());
                     //System.out.println("6");
                 }
@@ -149,11 +149,11 @@ public class Grupo {
                 }
                 continue;
             } else if (pref_2 == -2) {
-                if (pref_1 > 0 || pref_1 == 0 && jogador.UltimaCor() == 'p') {
+                if (jogador.quer_brancas()) {
                     pontuacao_par_atual += 1000;
                     pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId2());
                     //System.out.println("7");
-                } else if (pref_1 < 0 || jogador.UltimaCor() == 'b') {
+                } else if (jogador.quer_pretas()) {
                     pontuacao_par_atual += 0;
                     //System.out.println("8");
                 }
@@ -165,38 +165,23 @@ public class Grupo {
                 continue;
             }
             //acima são tratados os casos de preferencia forte        
-            if (pref_1 > 0 && pref_2 < 0
-                    || pref_1 > 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b'
-                    || jogador.UltimaCor() == 'p'
-                    && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
+            if (jogador.quer_brancas() && encontra_jogador(p.getId2()).quer_pretas()) {
                 pontuacao_par_atual += 1000;
                 pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId2());
                 //System.out.println("9");
-            } else if (pref_2 > 0 && pref_1 < 0
-                    || pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p' //ARRUMAR, checar só por preferencia depois pelas cores
-                    || jogador.UltimaCor() == 'b'
-                    && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
+            } else if (jogador.quer_pretas() && encontra_jogador(p.getId2()).quer_brancas()) {
                 p = p.inverter_cores();
                 pontuacao_par_atual += 1000;
                 pontuacao_par_atual += calcula_valor(!de_cima, 100, p.getId1());
                 //System.out.println("10");
             } else {
-                if (pref_1 > 0 && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
+                if (jogador.quer_brancas() && encontra_jogador(p.getId2()).quer_brancas()) {
                     pontuacao_par_atual += 1000;
                     //System.out.println("11");
-                } else if (pref_1 < 0 && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
+                } else if (jogador.quer_pretas() && encontra_jogador(p.getId2()).quer_pretas()) {
                     p = p.inverter_cores();
                     pontuacao_par_atual += 1000;
                     //System.out.println("12");
-                } else if (jogador.UltimaCor() == 'p'
-                        && encontra_jogador(p.getId2()).UltimaCor() == 'p') {
-                    pontuacao_par_atual += 1000;
-                    //System.out.println("13");
-                } else if (jogador.UltimaCor() == 'b'
-                        && encontra_jogador(p.getId2()).UltimaCor() == 'b') {
-                    p = p.inverter_cores();
-                    pontuacao_par_atual += 1000;
-                    //System.out.println("14");
                 }
             }
             if (pontuacao_par_atual > pontuacao_par_melhor) {
